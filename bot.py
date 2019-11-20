@@ -23,6 +23,9 @@ dp = Dispatcher(bot)
 
 
 class IsAdminFilter(BoundFilter):
+    """
+    Custom class to add "is_admin" filter for some handlers below
+    """
     key = 'is_admin'
 
     def __init__(self, is_admin):
