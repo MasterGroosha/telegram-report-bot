@@ -1,0 +1,9 @@
+
+# This is your "main" group where bot should operate as admin
+group_main = -1234567
+
+# This is a special group for admins. Report messages will be sent here and everyone can choose any action!
+group_reports = -76543321
+
+# Bot's language to use in messages. Currently "en" and "ru" are built-in
+language = "en"
