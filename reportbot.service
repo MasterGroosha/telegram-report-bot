@@ -1,0 +1,15 @@
+[Unit]
+Description=Reportbot for Telegram
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/user/reportbot
+ExecStart=/home/user/reportbot/bot.py
+KillMode=process
+Restart=always
+RestartSec=10
+Environment=BOT_TOKEN=1234567:AbCdEFGHiJKxyZ
+
+[Install]
+WantedBy=multi-user.target
