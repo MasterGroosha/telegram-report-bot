@@ -5,10 +5,10 @@ The main goal was to build a bot with no external database needed. Thus, it may 
 
 #### Screenshots
 User reports a message:  
-![screenshots/users_view.jpg]
+![User reports a message in regular chat](screenshots/users_view.jpg)
 
 Admins take action:  
-![screenshots/admin_view.jpg]
+![Admins get report in a special chat](screenshots/admin_view.jpg)
 
 #### Features
 * Handles `/report` command to gather reports from users;  
