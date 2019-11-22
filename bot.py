@@ -11,14 +11,15 @@ import config
 import localization as lang
 import utils
 
-if not getenv("BOT_TOKEN"):
+token = getenv("BOT_TOKEN")
+if not token:
     exit("No token provided")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
-bot = Bot(token=getenv("BOT_TOKEN"))
+bot = Bot(token=token)
 dp = Dispatcher(bot)
 
 
