@@ -19,7 +19,7 @@ if not token:
 logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
-bot = Bot(token=token)
+bot = Bot(token=token, parse_mode="HTML")
 dp = Dispatcher(bot)
 
 
@@ -97,9 +97,8 @@ async def cmd_report(message: types.Message):
                            utils.get_report_comment(message.reply_to_message.date,
                                                     message.reply_to_message.message_id,
                                                     report_message),
-                           parse_mode="HTML",
                            reply_markup=action_keyboard)
-    await message.reply(lang.get_string("report_delivered"), parse_mode="HTML")
+    await message.reply(lang.get_string("report_delivered"))
 
 
 @dp.message_handler(is_admin=True, chat_id=config.group_main, commands=["ro"])
@@ -130,8 +129,7 @@ async def cmd_readonly(message: types.Message):
                                    until_date=int(time()) + restriction_time
                                    )
     await message.reply(lang.get_string("resolved_readonly").format(restriction_time=words[1] if len(words) > 1
-                        else lang.get_string("restriction_forever")),
-                        parse_mode="HTML")
+                        else lang.get_string("restriction_forever")))
 
 
 @dp.message_handler(is_admin=True, chat_id=config.group_main, commands=["nomedia", "textonly", "nm"])
@@ -161,8 +159,7 @@ async def cmd_nomedia(message: types.Message):
                                    types.ChatPermissions(can_send_messages=True),
                                    until_date=int(time()) + restriction_time)
     await message.reply(lang.get_string("resolved_nomedia").format(restriction_time=words[1] if len(words) > 1
-                        else lang.get_string("restriction_forever")),
-                        parse_mode="HTML")
+                        else lang.get_string("restriction_forever")))
 
 
 @dp.message_handler(Text(startswith="@admin", ignore_case=True), chat_id=config.group_main)
@@ -177,8 +174,7 @@ async def calling_all_units(message: types.Message):
                                chat_id=utils.get_url_chat_id(config.group_main),
                                msg_id=message.reply_to_message.message_id
                                if message.reply_to_message
-                               else message.message_id),
-                           parse_mode="HTML")
+                               else message.message_id))
 
 
 @dp.message_handler(lambda message: message.text and len(message.text.split()) <= 2, chat_id=config.group_main)
@@ -204,8 +200,7 @@ async def callback_handler(call: types.CallbackQuery):
         await bot.delete_message(config.group_main, int(call.data.split("_")[1]))
         await bot.edit_message_text(chat_id=config.group_reports,
                                     message_id=call.message.message_id,
-                                    text=call.message.text + lang.get_string("action_deleted"),
-                                    parse_mode="HTML")
+                                    text=call.message.text + lang.get_string("action_deleted"))
         await bot.answer_callback_query(call.id, "Done")
         return
     elif call.data.startswith("delban_"):
@@ -213,8 +208,7 @@ async def callback_handler(call: types.CallbackQuery):
         await bot.kick_chat_member(chat_id=config.group_main, user_id=call.data.split("_")[2])
         await bot.edit_message_text(chat_id=config.group_reports,
                                     message_id=call.message.message_id,
-                                    text=call.message.text + lang.get_string("action_deleted_banned"),
-                                    parse_mode="HTML")
+                                    text=call.message.text + lang.get_string("action_deleted_banned"))
         await bot.answer_callback_query(call.id, "Done")
         return
     elif call.data.startswith("mute_"):
@@ -224,8 +218,7 @@ async def callback_handler(call: types.CallbackQuery):
                                        until_date=int(time()) + 7200)  # 2 hours from now
         await bot.edit_message_text(chat_id=config.group_reports,
                                     message_id=call.message.message_id,
-                                    text=call.message.text + lang.get_string("action_deleted_readonly"),
-                                    parse_mode="HTML")
+                                    text=call.message.text + lang.get_string("action_deleted_readonly"))
         await bot.answer_callback_query(call.id, "Done")
         return
 
