@@ -209,7 +209,6 @@ async def callback_handler(call: types.CallbackQuery):
         return
     elif call.data.startswith("delban_"):
         await bot.delete_message(config.group_main, int(call.data.split("_")[1]))
-        print(call.message.from_user.id)
         await bot.kick_chat_member(chat_id=config.group_main, user_id=call.data.split("_")[2])
         await bot.edit_message_text(chat_id=config.group_reports,
                                     message_id=call.message.message_id,
@@ -219,7 +218,6 @@ async def callback_handler(call: types.CallbackQuery):
         return
     elif call.data.startswith("mute_"):
         await bot.delete_message(config.group_main, int(call.data.split("_")[1]))
-        print(call.data)
         await bot.restrict_chat_member(chat_id=config.group_main, user_id=call.data.split("_")[2],
                                        permissions=types.ChatPermissions(),
                                        until_date=int(time()) + 7200)  # 2 hours from now
