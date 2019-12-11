@@ -27,11 +27,10 @@ Admins take action:
 2. Create a separate chat where report messages will be sent and add all group admins there. Remember: anyone who is in that group may perform actions like "Delete", "Ban" and so on, so be careful.  
 3. Clone this repo and `cd` into it;   
 4. Create a venv (virtual environment): `python3.7 -m venv venv`;  
-5. Open `bot.py` and change first line to match your current path to `venv/bin/python` executable;  
-6. `source venv/bin/python && pip install aiogram`;  
-7. `chmod +x bot.py`;  
-8. Open `config.py` and set correct "main" and "reports" chats IDs. To get IDs, add [@ShowJSONbot](https://t.me/showjsonbot) or [@my_id_bot](https://t.me/my_id_bot) to your chats.  
-9. Run your bot: `BOT_TOKEN=yourtoken ./bot.py`  
+5. `source venv/bin/python && pip install aiogram`;  
+6. `chmod +x bot.py`;  
+7. Open `config.py` and set correct "main" and "reports" chats IDs. To get IDs, add [@ShowJSONbot](https://t.me/showjsonbot) or [@my_id_bot](https://t.me/my_id_bot) to your chats.  
+8. Run your bot: `BOT_TOKEN=yourtoken ./bot.py`  
 
 If you want systemd support for autostart and other tasks: open `reportbot.service` file, change relevant options to match yours, enter correct token.  
 Now copy that file to `/etc/systemd/system` enable it with `systemctl enable reportbot.service` and run it: `systemctl restart reportbot.service`. Easy!

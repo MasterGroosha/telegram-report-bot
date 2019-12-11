@@ -1,4 +1,4 @@
-
+#!venv/bin/python
 import logging
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import BoundFilter, Text
