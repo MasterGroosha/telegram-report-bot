@@ -4,6 +4,7 @@ strings = {
     "en": {
         "error_no_reply": "This command must be sent as a reply to one's message!",
         "error_report_admin": "Whoa! Don't report admins 😈",
+        "error_restrict_admin": "You cannot restrict an admin.",
         "error_wrong_time_format": "Wrong time forman. Use a number + symbols 'h', 'm' or 'd'. F.ex. 4h",
         "error_message_too_short": "Please avoid short useless greetings. "
                                    "If you have a question or some information, put it in one message. Thanks in "
@@ -35,6 +36,7 @@ strings = {
     "ru": {
         "error_no_reply": "Эта команда должна быть ответом на какое-либо сообщение!",
         "error_report_admin": "Админов репортишь? Ай-ай-ай 😈",
+        "error_restrict_admin": "Невозможно ограничить администратора.",
         "error_wrong_time_format": "Неправильный формат времени. Используйте число + символ h, m или d. Например, 4h",
         "error_message_too_short": "Пожалуйста, избегайте бессмысленных коротких приветствий. "
                                    "Если у Вас есть вопрос или информация, напишите всё в одном сообщении. Заранее "

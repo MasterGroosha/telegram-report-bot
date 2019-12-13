@@ -115,6 +115,12 @@ async def cmd_readonly(message: types.Message):
         await message.reply(lang.get_string("error_no_reply"))
         return
 
+    # Admins cannot be restricted
+    user = await bot.get_chat_member(config.group_main, message.reply_to_message.from_user.id)
+    if user.is_chat_admin():
+        await message.reply(lang.get_string("error_restrict_admin"))
+        return
+
     words = message.text.split()
     restriction_time: int = 0
     if len(words) > 1:  # /ro with arg
@@ -144,6 +150,12 @@ async def cmd_nomedia(message: types.Message):
     # Check if command is sent as reply to some message
     if not message.reply_to_message:
         await message.reply(lang.get_string("error_no_reply"))
+        return
+
+    # Admins cannot be restricted
+    user = await bot.get_chat_member(config.group_main, message.reply_to_message.from_user.id)
+    if user.is_chat_admin():
+        await message.reply(lang.get_string("error_restrict_admin"))
         return
 
     words = message.text.split()
