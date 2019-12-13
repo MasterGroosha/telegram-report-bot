@@ -29,8 +29,8 @@ Admins take action:
 4. Create a venv (virtual environment): `python3.7 -m venv venv`;  
 5. `source venv/bin/python && pip install aiogram`;  
 6. `chmod +x bot.py`;  
-7. Open `config.py` and set correct "main" and "reports" chats IDs. To get IDs, add [@ShowJSONbot](https://t.me/showjsonbot) or [@my_id_bot](https://t.me/my_id_bot) to your chats.  
+7. Copy `config.py.example` to `config.py`, open it and set correct "main" and "reports" chats IDs. To get IDs, add [@ShowJSONbot](https://t.me/showjsonbot) or [@my_id_bot](https://t.me/my_id_bot) to your chats.  
 8. Run your bot: `BOT_TOKEN=yourtoken ./bot.py`  
 
 If you want systemd support for autostart and other tasks: open `reportbot.service` file, change relevant options to match yours, enter correct token.  
-Now copy that file to `/etc/systemd/system` enable it with `systemctl enable reportbot.service` and run it: `systemctl restart reportbot.service`. Easy!
+Now move that file to `/etc/systemd/system` enable it with `systemctl enable reportbot.service` and run it: `systemctl restart reportbot.service`. Easy!
