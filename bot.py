@@ -49,7 +49,7 @@ async def on_user_join(message: types.Message):
     await message.delete()
 
 
-@dp.message_handler(chat_id=config.group_main, commands=["report"])
+@dp.message_handler(chat_id=config.group_main, commands="report")
 async def cmd_report(message: types.Message):
     """
     Handler for /report command in chat.
@@ -101,7 +101,7 @@ async def cmd_report(message: types.Message):
     await message.reply(lang.get_string("report_delivered"))
 
 
-@dp.message_handler(is_admin=True, chat_id=config.group_main, commands=["ro"])
+@dp.message_handler(is_admin=True, chat_id=config.group_main, commands="ro")
 async def cmd_readonly(message: types.Message):
     """
     Handler for /ro command in chat.
@@ -189,7 +189,7 @@ async def calling_all_units(message: types.Message):
                                else message.message_id))
 
 
-@dp.message_handler(lambda message: message.text and len(message.text.split()) <= 2, chat_id=config.group_main)
+@dp.message_handler(lambda message: len(message.text.split()) <= 2, chat_id=config.group_main)
 async def short_messages(message: types.Message):
     """
     Handler which triggers when there are only 2 or less words in a message.
@@ -202,7 +202,7 @@ async def short_messages(message: types.Message):
             await message.reply(lang.get_string("error_message_too_short"))
 
 
-@dp.callback_query_handler(lambda call: call.data)
+@dp.callback_query_handler()
 async def callback_handler(call: types.CallbackQuery):
     """
     Keyboard buttons handler
