@@ -1,5 +1,6 @@
 #!venv/bin/python
 import logging
+import datetime
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import BoundFilter, Text
 from time import time
@@ -189,7 +190,7 @@ async def calling_all_units(message: types.Message):
                                else message.message_id))
 
 
-@dp.message_handler(lambda message: len(message.text.split()) <= 2, chat_id=config.group_main)
+@dp.message_handler(lambda message: 0 < len(message.text.split()) <= 2, chat_id=config.group_main)
 async def short_messages(message: types.Message):
     """
     Handler which triggers when there are only 2 or less words in a message.
@@ -197,6 +198,11 @@ async def short_messages(message: types.Message):
     asks user to express his thoughts without such short useless sentences.
     :param message: Telegram message consisting of 2 or less words
     """
+    # Не будем это использовать по воскресеньям
+    now = datetime.datetime.now()+datetime.timedelta(hours=3)
+    if now.weekday() == 6:  # 6 — это воскресенье
+        return
+
     for word in message.text.lower().split():
         if word.replace(",", "").replace("!", "").replace(".", "") in lang.get_string("greetings_words"):
             await message.reply(lang.get_string("error_message_too_short"))
