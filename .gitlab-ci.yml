@@ -14,7 +14,7 @@ before_script:
 
 stages:
   - build
-  - push
+#  - push
 
 build-bot:
   stage: build
