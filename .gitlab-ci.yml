@@ -24,4 +24,4 @@ build-tgeeksbot:
     - |
       docker build \
       -t "$CI_REGISTRY/groosha/$CI_PROJECT_NAME/tgeeksbot:$CI_COMMIT_TAG" .
-      docker push $CI_REGISTRY/groosha/$CI_PROJECT_NAME
+      docker push $CI_REGISTRY/groosha/$CI_PROJECT_NAME/tgeeksbot
