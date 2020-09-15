@@ -9,8 +9,13 @@ from sys import exit
 
 # Local files
 import config
+from config import cfg
 import localization as lang
 import utils
+
+if not config.check_config_file("config.ini"):
+    exit(1)
+
 
 token = getenv("BOT_TOKEN")
 if not token:
