@@ -8,25 +8,29 @@ from os import getenv
 from sys import exit
 
 # Local files
-import config
-from config import cfg
-import localization as lang
-import utils
-
-if not config.check_config_file("config.ini"):
-    exit(1)
+import configurator
+from configurator import config
 
 
-token = getenv("BOT_TOKEN")
-if not token:
+# import localization as lang
+# import utils
+
+if not configurator.check_config_file("config.ini"):
+    exit("Errors while parsing config file. Exiting.")
+
+if not config.bot.token:
     exit("No token provided")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
-bot = Bot(token=token, parse_mode="HTML")
+bot = Bot(token=config.bot.token, parse_mode="HTML")
 dp = Dispatcher(bot)
+
+print("exited")
+exit(0)
+# TODO: Continue
 
 
 class IsAdminFilter(BoundFilter):
@@ -46,7 +50,7 @@ class IsAdminFilter(BoundFilter):
 dp.filters_factory.bind(IsAdminFilter)
 
 
-@dp.message_handler(chat_id=config.group_main, content_types=["new_chat_members"])
+@dp.message_handler(chat_id=cfg.config.getint("bot", "group_main"), content_types=["new_chat_members"])
 async def on_user_join(message: types.Message):
     """
     Removes "user joined" message
@@ -55,7 +59,7 @@ async def on_user_join(message: types.Message):
     await message.delete()
 
 
-@dp.message_handler(chat_id=config.group_main, commands="report")
+@dp.message_handler(chat_id=cfg.config.getint("bot", "group_main"), commands="report")
 async def cmd_report(message: types.Message):
     """
     Handler for /report command in chat.
@@ -69,7 +73,7 @@ async def cmd_report(message: types.Message):
         return
 
     # We don't want users to report an admin
-    user = await bot.get_chat_member(config.group_main, message.reply_to_message.from_user.id)
+    user = await bot.get_chat_member(cfg.config.getint("bot", "group_main"), message.reply_to_message.from_user.id)
     if user.is_chat_admin():
         await message.reply(lang.get_string("error_report_admin"))
         return
@@ -98,8 +102,8 @@ async def cmd_report(message: types.Message):
         callback_data=f"mute_{message.reply_to_message.message_id}_{message.reply_to_message.from_user.id}"
     ))
 
-    await message.reply_to_message.forward(config.group_reports)
-    await bot.send_message(config.group_reports,
+    await message.reply_to_message.forward(configurator.group_reports)
+    await bot.send_message(configurator.group_reports,
                            utils.get_report_comment(message.reply_to_message.date,
                                                     message.reply_to_message.message_id,
                                                     report_message),
@@ -107,7 +111,7 @@ async def cmd_report(message: types.Message):
     await message.reply(lang.get_string("report_delivered"))
 
 
-@dp.message_handler(is_admin=True, chat_id=config.group_main, commands="ro")
+@dp.message_handler(is_admin=True, chat_id=cfg.config.getint("bot", "group_main"), commands="ro")
 async def cmd_readonly(message: types.Message):
     """
     Handler for /ro command in chat.
@@ -122,7 +126,7 @@ async def cmd_readonly(message: types.Message):
         return
 
     # Admins cannot be restricted
-    user = await bot.get_chat_member(config.group_main, message.reply_to_message.from_user.id)
+    user = await bot.get_chat_member(cfg.config.getint("bot", "group_main"), message.reply_to_message.from_user.id)
     if user.is_chat_admin():
         await message.reply(lang.get_string("error_restrict_admin"))
         return
@@ -135,7 +139,7 @@ async def cmd_readonly(message: types.Message):
             await message.reply(lang.get_string("error_wrong_time_format"))
             return
 
-    await bot.restrict_chat_member(config.group_main,
+    await bot.restrict_chat_member(cfg.config.getint("bot", "group_main"),
                                    message.reply_to_message.from_user.id,
                                    types.ChatPermissions(),
                                    until_date=int(time()) + restriction_time
@@ -144,7 +148,7 @@ async def cmd_readonly(message: types.Message):
                         else lang.get_string("restriction_forever")))
 
 
-@dp.message_handler(is_admin=True, chat_id=config.group_main, commands=["nomedia", "textonly", "nm"])
+@dp.message_handler(is_admin=True, chat_id=cfg.config.getint("bot", "group_main"), commands=["nomedia", "textonly", "nm"])
 async def cmd_nomedia(message: types.Message):
     """
     Handler for /nomedia or /textonly or /nm command in chat.
@@ -159,7 +163,7 @@ async def cmd_nomedia(message: types.Message):
         return
 
     # Admins cannot be restricted
-    user = await bot.get_chat_member(config.group_main, message.reply_to_message.from_user.id)
+    user = await bot.get_chat_member(cfg.config.getint("bot", "group_main"), message.reply_to_message.from_user.id)
     if user.is_chat_admin():
         await message.reply(lang.get_string("error_restrict_admin"))
         return
@@ -172,7 +176,7 @@ async def cmd_nomedia(message: types.Message):
             await message.reply(lang.get_string("error_wrong_time_format"))
             return
 
-    await bot.restrict_chat_member(config.group_main,
+    await bot.restrict_chat_member(cfg.config.getint("bot", "group_main"),
                                    message.reply_to_message.from_user.id,
                                    types.ChatPermissions(can_send_messages=True),
                                    until_date=int(time()) + restriction_time)
@@ -180,22 +184,22 @@ async def cmd_nomedia(message: types.Message):
                         else lang.get_string("restriction_forever")))
 
 
-@dp.message_handler(Text(startswith="@admin", ignore_case=True), chat_id=config.group_main)
+@dp.message_handler(Text(startswith="@admin", ignore_case=True), chat_id=cfg.config.getint("bot", "group_main"))
 async def calling_all_units(message: types.Message):
     """
     Handler which is triggered when message starts with @admin.
     Honestly any combination will work: @admin, @admins, @adminisshit
     :param message: Telegram message where text starts with @admin
     """
-    await bot.send_message(config.group_reports,
+    await bot.send_message(configurator.group_reports,
                            lang.get_string("need_admins_attention").format(
-                               chat_id=utils.get_url_chat_id(config.group_main),
+                               chat_id=utils.get_url_chat_id(cfg.config.getint("bot", "group_main")),
                                msg_id=message.reply_to_message.message_id
                                if message.reply_to_message
                                else message.message_id))
 
 
-@dp.message_handler(lambda message: 0 < len(message.text.split()) <= 2, chat_id=config.group_main)
+@dp.message_handler(lambda message: 0 < len(message.text.split()) <= 2, chat_id=cfg.config.getint("bot", "group_main"))
 async def short_messages(message: types.Message):
     """
     Handler which triggers when there are only 2 or less words in a message.
@@ -220,26 +224,26 @@ async def callback_handler(call: types.CallbackQuery):
     :param call: Callback with action put into call.data field
     """
     if call.data.startswith("del_"):
-        await bot.delete_message(config.group_main, int(call.data.split("_")[1]))
-        await bot.edit_message_text(chat_id=config.group_reports,
+        await bot.delete_message(cfg.config.getint("bot", "group_main"), int(call.data.split("_")[1]))
+        await bot.edit_message_text(chat_id=configurator.group_reports,
                                     message_id=call.message.message_id,
                                     text=call.message.text + lang.get_string("action_deleted"))
         await bot.answer_callback_query(call.id, "Done")
         return
     elif call.data.startswith("delban_"):
-        await bot.delete_message(config.group_main, int(call.data.split("_")[1]))
-        await bot.kick_chat_member(chat_id=config.group_main, user_id=call.data.split("_")[2])
-        await bot.edit_message_text(chat_id=config.group_reports,
+        await bot.delete_message(cfg.config.getint("bot", "group_main"), int(call.data.split("_")[1]))
+        await bot.kick_chat_member(chat_id=cfg.config.getint("bot", "group_main"), user_id=call.data.split("_")[2])
+        await bot.edit_message_text(chat_id=configurator.group_reports,
                                     message_id=call.message.message_id,
                                     text=call.message.text + lang.get_string("action_deleted_banned"))
         await bot.answer_callback_query(call.id, "Done")
         return
     elif call.data.startswith("mute_"):
-        await bot.delete_message(config.group_main, int(call.data.split("_")[1]))
-        await bot.restrict_chat_member(chat_id=config.group_main, user_id=call.data.split("_")[2],
+        await bot.delete_message(cfg.config.getint("bot", "group_main"), int(call.data.split("_")[1]))
+        await bot.restrict_chat_member(chat_id=cfg.config.getint("bot", "group_main"), user_id=call.data.split("_")[2],
                                        permissions=types.ChatPermissions(),
                                        until_date=int(time()) + 7200)  # 2 hours from now
-        await bot.edit_message_text(chat_id=config.group_reports,
+        await bot.edit_message_text(chat_id=configurator.group_reports,
                                     message_id=call.message.message_id,
                                     text=call.message.text + lang.get_string("action_deleted_readonly"))
         await bot.answer_callback_query(call.id, "Done")
