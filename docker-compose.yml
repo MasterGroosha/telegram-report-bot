@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+
+  telegram-report-bot:
+    image: telegram-report-bot:latest
+    build:
+      context: .
+    environment:
+      - BOT_TOKEN=$BOT_TOKEN
+    command: python3 /root/bot.py
+    volumes:
+      - ./config.py:/root/config.py
+      - /etc/localtime:/etc/localtime:ro
