@@ -4,11 +4,12 @@ services:
 
   telegram-report-bot:
     image: telegram-report-bot:latest
+    restart: always
     build:
       context: .
     environment:
       - BOT_TOKEN=$BOT_TOKEN
-    command: python3 /root/bot.py
+    command: python3 /app/bot.py
     volumes:
       - ./config.py:/root/config.py
       - /etc/localtime:/etc/localtime:ro
