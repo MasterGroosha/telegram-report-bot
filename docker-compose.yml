@@ -9,6 +9,7 @@ services:
       context: .
     environment:
       - BOT_TOKEN=$BOT_TOKEN
+      - TZ=$TIMEZONE
     command: python3 /app/bot.py
     volumes:
       - ./config.py:/root/config.py

@@ -2,7 +2,6 @@ FROM python:3.8-buster
 
 ENV LANG=C.UTF-8
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential python-dev && rm -rf /var/lib/apt/lists/*
 COPY ./ /app/
 
 RUN pip install --upgrade pip
