@@ -6,7 +6,7 @@ from filters import IsAdminFilter
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-if not check_config_file("config.ini"):
+if not check_config_file("config/config.ini"):
     exit("Errors while parsing config file. Exiting.")
 
 if not config.bot.token:
