@@ -10,18 +10,29 @@ services:
     command: ["dockerd-entrypoint.sh"]
 
 before_script:
-  - docker login -u groosha -p $USER_TOKEN $CI_REGISTRY
+  - docker login -u $REGISTRY_USERNAME -p $USER_TOKEN $CI_REGISTRY
 
 stages:
   - build
-#  - push
 
-build-tgeeksbot:
+
+build-latest:
   stage: build
   rules:
-    - if: '$CI_COMMIT_TAG =~ /tgchat_v.*/'
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: on_success
   script:
     - |
-      docker build \
-      -t "$CI_REGISTRY/groosha/$CI_PROJECT_NAME/tgeeksbot:$CI_COMMIT_TAG" .
-      docker push $CI_REGISTRY/groosha/$CI_PROJECT_NAME/tgeeksbot
+      docker build --pull -t "$CI_REGISTRY_IMAGE:latest" .
+      docker push "$CI_REGISTRY_IMAGE:latest"
+
+
+build-tagged:
+  stage: build
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+.\d+.\d+/'
+  script:
+    - |
+      docker pull "$CI_REGISTRY_IMAGE:latest"
+      docker tag "$CI_REGISTRY_IMAGE:latest" "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+      docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
