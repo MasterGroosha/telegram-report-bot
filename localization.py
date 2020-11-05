@@ -1,4 +1,4 @@
-from config import language
+from configurator import config
 
 strings = {
     "en": {
@@ -71,13 +71,14 @@ strings = {
 def get_string(key):
     """
     Get localized string. First, try language as set in config. Then, try English locale. Else - raise an exception.
+
     :param key: string name
     :return: localized string
     """
-    lang = strings.get(language)
+    lang = strings.get(config.bot.language)
     if not lang:
         if not strings.get("en"):
-            raise KeyError(f'Neither "{language}" nor "en" locales found')
+            raise KeyError(f'Neither "{config.bot.language}" nor "en" locales found')
         else:
             lang = strings.get("en")
     try:

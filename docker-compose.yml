@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+    bot:
+        image: telegram-report-bot:latest
+        container_name: "tg-report-bot"
+        volumes:
+            - './data/config:/app/config'
+        restart: always
