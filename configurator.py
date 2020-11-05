@@ -24,7 +24,8 @@ config = Config()
 
 def check_config_file(filename: str) -> bool:
     required_structure = {
-        "bot": ["token"]
+        "bot": ["token", "language"],
+        "groups": ["main", "reports"]
     }
 
     global config
@@ -53,10 +54,3 @@ def check_config_file(filename: str) -> bool:
             return False
 
     return True
-
-
-if __name__ == '__main__':
-    check_config_file("config.ini")
-    print(config.bot.token)
-    # print(config.groups.main)
-
