@@ -1,3 +1,4 @@
+import datetime
 from aiogram import types
 from configurator import config
 from misc import dp
@@ -23,6 +24,11 @@ async def short_messages(message: types.Message):
 
     :param message: Telegram message consisting of 2 or less words
     """
+    # Не будем это использовать по воскресеньям
+    now = datetime.datetime.now() + datetime.timedelta(hours=3)
+    if now.weekday() == 6:  # 6 — это воскресенье
+        return
+
     for word in message.text.lower().split():
         if word.replace(",", "").replace("!", "").replace(".", "") in localization.get_string("greetings_words"):
             await message.reply(localization.get_string("error_message_too_short"))

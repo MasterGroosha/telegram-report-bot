@@ -16,23 +16,23 @@ stages:
   - build
 
 
-build-latest:
+build-tgeeksbot-latest:
   stage: build
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "tgchat"'
       when: on_success
   script:
     - |
-      docker build --pull -t "$CI_REGISTRY_IMAGE:latest" .
-      docker push "$CI_REGISTRY_IMAGE:latest"
+      docker build --pull -t "$CI_REGISTRY_IMAGE:tgchat_latest" .
+      docker push "$CI_REGISTRY_IMAGE:tgchat_latest"
 
 
-build-tagged:
+build-tgeeksbot-tagged:
   stage: build
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^v\d+.\d+.\d+/'
+    - if: '$CI_COMMIT_TAG =~ /tgchat_v\d+.\d+/'
   script:
     - |
-      docker pull "$CI_REGISTRY_IMAGE:latest"
-      docker tag "$CI_REGISTRY_IMAGE:latest" "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+      docker pull "$CI_REGISTRY_IMAGE:tgchat_latest"
+      docker tag "$CI_REGISTRY_IMAGE:tgchat_latest" "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
       docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
