@@ -6,7 +6,7 @@ services:
         build:
           context: .
         environment:
-          - BOT_TOKEN=$BOT_TOKEN\
+          - BOT_TOKEN=$BOT_TOKEN
           - TZ=$TIMEZONE
         volumes:
           - ./config.py:/app/config.py
