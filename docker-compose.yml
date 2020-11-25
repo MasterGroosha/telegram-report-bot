@@ -9,6 +9,6 @@ services:
       - BOT_TOKEN=$BOT_TOKEN
       - TZ=$TIMEZONE
     volumes:
-      - ./config.py:/app/config.py
+      - ./config.ini:/app/config.ini
       - /etc/localtime:/etc/localtime:ro
     restart: always
