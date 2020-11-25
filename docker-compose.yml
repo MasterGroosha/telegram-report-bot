@@ -1,16 +1,14 @@
-version: "3.7"
-
+version: "3.8"
 services:
-
-  telegram-report-bot:
-    image: telegram-report-bot:latest
-    restart: always
-    build:
-      context: .
-    environment:
-      - BOT_TOKEN=$BOT_TOKEN
-      - TZ=$TIMEZONE
-    command: python3 /app/bot.py
-    volumes:
-      - ./config.py:/root/config.py
-      - /etc/localtime:/etc/localtime:ro
+    bot:
+        image: telegram-report-bot:latest
+        container_name: "tg-report-bot"
+        build:
+          context: .
+        environment:
+          - BOT_TOKEN=$BOT_TOKEN\
+          - TZ=$TIMEZONE
+        volumes:
+          - ./config.py:/app/config.py
+          - /etc/localtime:/etc/localtime:ro
+        restart: always
