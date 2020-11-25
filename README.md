@@ -40,8 +40,8 @@ Now move that file to `/etc/systemd/system` enable it with `systemctl enable rep
 
 
 #### Launch in Docker container
-1. Go to [@BotFather](https://t.me/telegram), create a new bot, write down its token, add it to your existing group and **make bot an admin**. $
-2. Create a separate chat where report messages will be sent and add all group admins there. Remember: anyone who is in that group may perform $
+1. Go to [@BotFather](https://t.me/telegram), create a new bot, write down its token, add it to your existing group and **make bot an admin**. You also need to give it "Delete messages" permission.
+2. Create a separate chat where report messages will be sent and add all group admins there. Remember: anyone who is in that group may perform actions like "Delete", "Ban" and so on, so be careful.
 3. Clone this repo and `cd` into it;
 4. Copy `config.py.example` to `config.py`, open it and set correct "main" and "reports" chats IDs. To get IDs, add [@ShowJSONbot](https://t.me/showjsonbot) or [@my_id_bot](https://t.me/my_id_bot) to your chats.
 5. Copy file `.env_dist` to `.env` and change variable in it.
