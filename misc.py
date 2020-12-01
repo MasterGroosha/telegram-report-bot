@@ -1,20 +1,22 @@
 import logging
 from aiogram import Bot, Dispatcher
-from configurator import config, check_config_file
+from configurator import Config, check_config
 from filters import IsAdminFilter
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-if not check_config_file("config/config.ini"):
-    exit("Errors while parsing config file. Exiting.")
+ok, error = check_config()
+if not ok:
+    exit(error)
 
-if not config.bot.token:
+
+if not Config.BOT_TOKEN:
     exit("No token provided")
 
 
 # Initialize bot and dispatcher
-bot = Bot(token=config.bot.token, parse_mode="HTML")
+bot = Bot(token=Config.BOT_TOKEN, parse_mode="HTML")
 dp = Dispatcher(bot)
 
 # Activate filters

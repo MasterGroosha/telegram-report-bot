@@ -1,13 +1,12 @@
-from time import time
 from aiogram import types
 from aiogram.dispatcher.filters import Text
-from configurator import config
+from configurator import Config
 from misc import dp
 import localization
 import utils
 
 
-@dp.message_handler(chat_id=config.groups.main, commands="report")
+@dp.message_handler(chat_id=Config.GROUP_MAIN, commands="report")
 async def cmd_report(message: types.Message):
     """
     Handler for /report command in chat.
@@ -21,7 +20,7 @@ async def cmd_report(message: types.Message):
         return
 
     # We don't want users to report an admin
-    user = await message.bot.get_chat_member(config.groups.main, message.reply_to_message.from_user.id)
+    user = await message.bot.get_chat_member(Config.GROUP_MAIN, message.reply_to_message.from_user.id)
     if user.is_chat_admin():
         await message.reply(localization.get_string("error_report_admin"))
         return
@@ -50,9 +49,9 @@ async def cmd_report(message: types.Message):
         callback_data=f"mute_{message.reply_to_message.message_id}_{message.reply_to_message.from_user.id}"
     ))
 
-    await message.reply_to_message.forward(config.groups.reports)
+    await message.reply_to_message.forward(Config.GROUP_REPORTS)
     await message.bot.send_message(
-        config.groups.reports,
+        Config.GROUP_REPORTS,
         utils.get_report_comment(
             message.reply_to_message.date,
             message.reply_to_message.message_id,
@@ -62,7 +61,7 @@ async def cmd_report(message: types.Message):
     await message.reply(localization.get_string("report_delivered"))
 
 
-@dp.message_handler(Text(startswith="@admin", ignore_case=True), chat_id=config.groups.main)
+@dp.message_handler(Text(startswith="@admin", ignore_case=True), chat_id=Config.GROUP_MAIN)
 async def calling_all_units(message: types.Message):
     """
     Handler which is triggered when message starts with @admin.
@@ -71,9 +70,9 @@ async def calling_all_units(message: types.Message):
     :param message: Telegram message where text starts with @admin
     """
     await message.bot.send_message(
-        config.groups.reports,
+        Config.GROUP_REPORTS,
         localization.get_string("need_admins_attention").format(
-            chat_id=utils.get_url_chat_id(config.groups.main),
+            chat_id=utils.get_url_chat_id(Config.GROUP_MAIN),
             msg_id=message.reply_to_message.message_id
             if message.reply_to_message
             else message.message_id
