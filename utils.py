@@ -41,7 +41,7 @@ def get_report_comment(message_date: datetime.datetime, message_id: int, report_
     """
     msg = localization.get_string("report_message").format(
         date=message_date.strftime(localization.get_string("report_date_format")),
-        chat_id=get_url_chat_id(Config.GROUP_MAIN),
+        chat_id=get_url_chat_id(int(Config.GROUP_MAIN)),
         msg_id=message_id)
 
     if report_message:
