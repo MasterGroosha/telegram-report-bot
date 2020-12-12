@@ -11,3 +11,5 @@ services:
             - BOT_LANGUAGE=${BOT_LANGUAGE}
             - GROUP_MAIN=${GROUP_MAIN}
             - GROUP_REPORTS=${GROUP_REPORTS}
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
