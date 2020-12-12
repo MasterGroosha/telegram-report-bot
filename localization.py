@@ -5,7 +5,7 @@ strings = {
         "error_no_reply": "This command must be sent as a reply to one's message!",
         "error_report_admin": "Whoa! Don't report admins 😈",
         "error_restrict_admin": "You cannot restrict an admin.",
-        "error_wrong_time_format": "Wrong time forman. Use a number + symbols 'h', 'm' or 'd'. F.ex. 4h",
+        "error_wrong_time_format": "Wrong time format. Use a number + symbols 'h', 'm' or 'd'. F.ex. 4h",
         "error_message_too_short": "Please avoid short useless greetings. "
                                    "If you have a question or some information, put it in one message. Thanks in "
                                    "advance! 🤓",
@@ -18,7 +18,7 @@ strings = {
 
         "action_del_msg": "Delete message",
         "action_del_and_ban": "Delete and ban",
-        "action_del_and_readonly": "Set user readonly for 2 hours",
+        "action_del_and_readonly": "Delete and set RO for 2 hours",
 
         "action_deleted": "\n\n🗑 <b>Deleted</b>",
         "action_deleted_banned": "\n\n🗑❌ <b>Deleted, user banned</b>",
@@ -42,7 +42,7 @@ strings = {
                                    "Если у Вас есть вопрос или информация, напишите всё в одном сообщении. Заранее "
                                    "спасибо! 🤓",
 
-        "report_date_format": "%d.%m.%Y в %H:%M (server time)",
+        "report_date_format": "%d.%m.%Y в %H:%M (серверное время)",
         "report_message": '👆 Отправлено {date}\n'
                           '<a href="https://t.me/c/{chat_id}/{msg_id}">Перейти к сообщению</a>',
         "report_note": "\n\nПримечание:{note}",
@@ -50,7 +50,7 @@ strings = {
 
         "action_del_msg": "Удалить сообщение",
         "action_del_and_ban": "Удалить и забанить",
-        "action_del_and_readonly": "Дать Read-only на 2 часа",
+        "action_del_and_readonly": "Удалить и дать RO на 2 часа",
 
         "action_deleted": "\n\n🗑 <b>Удалено</b>",
         "action_deleted_banned": "\n\n🗑❌ <b>Удалено, юзер забанен</b>",
