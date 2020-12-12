@@ -1,4 +1,3 @@
-#!venv/bin/python
 from aiogram import executor
 from misc import dp
 import handlers

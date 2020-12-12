@@ -1,8 +1,15 @@
 version: "3.8"
 services:
     bot:
-        image: telegram-report-bot:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
         container_name: "tg-report-bot"
-        volumes:
-            - './data/config:/app/config'
         restart: always
+        environment:
+            - BOT_TOKEN=${BOT_TOKEN}
+            - BOT_LANGUAGE=${BOT_LANGUAGE}
+            - GROUP_MAIN=${GROUP_MAIN}
+            - GROUP_REPORTS=${GROUP_REPORTS}
+        volumes:
+            - /etc/localtime:/etc/localtime:ro

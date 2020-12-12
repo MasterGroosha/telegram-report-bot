@@ -1,10 +1,10 @@
 from aiogram import types
-from configurator import config
+from configurator import Config
 from misc import dp
 import localization
 
 
-@dp.message_handler(chat_id=config.groups.main, content_types=["new_chat_members"])
+@dp.message_handler(chat_id=Config.GROUP_MAIN, content_types=["new_chat_members"])
 async def on_user_join(message: types.Message):
     """
     Removes "user joined" message
@@ -14,7 +14,7 @@ async def on_user_join(message: types.Message):
     await message.delete()
 
 
-@dp.message_handler(lambda message: 0 < len(message.text.split()) <= 2, chat_id=config.groups.main)
+@dp.message_handler(lambda message: 0 < len(message.text.split()) <= 2, chat_id=Config.GROUP_MAIN)
 async def short_messages(message: types.Message):
     """
     Handler which triggers when there are only 2 or less words in a message.

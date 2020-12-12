@@ -1,12 +1,12 @@
 from time import time
 from aiogram import types
-from configurator import config
+from configurator import Config
 from misc import dp
 import localization
 import utils
 
 
-@dp.message_handler(is_admin=True, chat_id=config.groups.main, commands="ro")
+@dp.message_handler(is_admin=True, chat_id=Config.GROUP_MAIN, commands="ro")
 async def cmd_readonly(message: types.Message):
     """
     Handler for /ro command in chat.
@@ -22,7 +22,7 @@ async def cmd_readonly(message: types.Message):
         return
 
     # Admins cannot be restricted
-    user = await message.bot.get_chat_member(config.groups.main, message.reply_to_message.from_user.id)
+    user = await message.bot.get_chat_member(Config.GROUP_MAIN, message.reply_to_message.from_user.id)
     if user.is_chat_admin():
         await message.reply(localization.get_string("error_restrict_admin"))
         return
@@ -35,7 +35,7 @@ async def cmd_readonly(message: types.Message):
             await message.reply(localization.get_string("error_wrong_time_format"))
             return
 
-    await message.bot.restrict_chat_member(config.groups.main,
+    await message.bot.restrict_chat_member(Config.GROUP_MAIN,
                                            message.reply_to_message.from_user.id,
                                            types.ChatPermissions(),
                                            until_date=int(time()) + restriction_time
@@ -44,7 +44,7 @@ async def cmd_readonly(message: types.Message):
     else localization.get_string("restriction_forever")))
 
 
-@dp.message_handler(is_admin=True, chat_id=config.groups.main, commands=["nomedia", "textonly", "nm"])
+@dp.message_handler(is_admin=True, chat_id=Config.GROUP_MAIN, commands=["nomedia", "textonly", "nm"])
 async def cmd_nomedia(message: types.Message):
     """
     Handler for /nomedia or /textonly or /nm command in chat.
@@ -60,7 +60,7 @@ async def cmd_nomedia(message: types.Message):
         return
 
     # Admins cannot be restricted
-    user = await message.bot.get_chat_member(config.groups.main, message.reply_to_message.from_user.id)
+    user = await message.bot.get_chat_member(Config.GROUP_MAIN, message.reply_to_message.from_user.id)
     if user.is_chat_admin():
         await message.reply(localization.get_string("error_restrict_admin"))
         return
@@ -74,7 +74,7 @@ async def cmd_nomedia(message: types.Message):
             return
 
     await message.bot.restrict_chat_member(
-        config.groups.main,
+        Config.GROUP_MAIN,
         message.reply_to_message.from_user.id,
         types.ChatPermissions(can_send_messages=True),
         until_date=int(time()) + restriction_time)
