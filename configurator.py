@@ -13,6 +13,6 @@ def check_config() -> Tuple[bool, Optional[str]]:
     for key in ("BOT_TOKEN", "BOT_LANGUAGE", "GROUP_MAIN", "GROUP_REPORTS"):
         env_value = getenv(key)
         if not env_value:
-            return False, 'Error: environment variable {key} is not defined. Exiting.'
+            return False, f'Error: environment variable {key} is not defined. Exiting.'
         setattr(Config, key, env_value)
     return True, None
