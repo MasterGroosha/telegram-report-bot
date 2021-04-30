@@ -9,7 +9,7 @@ ExecStart=/opt/telegram-report-bot/venv/bin/python bot.py
 KillMode=process
 Restart=always
 RestartSec=10
-EnvironmentFile=/opt/.env
+EnvironmentFile=/opt/telegram-report-bot/.env
 
 [Install]
 WantedBy=multi-user.target

@@ -1,25 +1,24 @@
 # Report bot for Telegram
 
-This repository contains sources of a small yet rather powerful bot for Telegram, which handles reports from users and passes them to admins. Uses [aiogram](https://github.com/aiogram/aiogram) framework.  
-The main goal was to build a bot with no external database needed. Thus, it may lack some features, but hey, it's open source!
+This repository contains source code of a small yet rather powerful bot for Telegram, which handles reports from users and passes them to admins. 
+Uses [aiogram](https://github.com/aiogram/aiogram) framework.  
+The main goal is to build a bot with no external database needed. Thus, it may lack some features, but hey, it's open source!
 
-#### Screenshots
-User reports a message:  
-![User reports a message in regular chat](screenshots/users_view.jpg)
+#### Screenshot
 
-Admins take action:  
-![Admins get report in a special chat](screenshots/admin_view.jpg)
+![Left - main group. Right - group for admins only](screenshots/cover.png)
 
 #### Features
-* Handles `/report` command to gather reports from users;  
-* Handles `/ro` command to set user "Read-only" and `/textonly` to allow text messages only;
+* `/report` command to gather reports from users;  
+* `/ro` command to set user "read-only" and `/nomedia` to allow text messages only;
 * Removes "user joined" messages;  
-* Reacts to short "greetings" messages like "Hey everyone", kindly asking user to proceed to their question or problem directly;  
-* Provides a simple interface for admins to choose one of actions on reported message.
+* If text message starts with `@admin`, admins are notified;  
+* A simple interface for admins to choose one of actions on reported message;  
+* English and Russian languages are built-in.
 
 #### Requirements
-* Python 3.7 and above;  
-* Linux is mentioned in the following installation guide, but bot should also work on Windows: no platform-specific code is used;  
+* Python 3.9 and above;  
+* Tested on Linux, should work on Windows, no platform-specific code is used;  
 * Systemd (you can use it to enable autostart and autorestart) or Docker.
 
 #### Installation  
@@ -32,7 +31,7 @@ and **make bot an admin**. You also need to give it "Delete messages" permission
 4. Now choose installation method: **systemd** or **Docker**
 
 ##### systemd
-1. Create a venv (virtual environment): `python3.7 -m venv venv` (or any other Python 3.7+ version);  
+1. Create a venv (virtual environment): `python3.9 -m venv venv` (or any other Python 3.7+ version);  
 2. `source venv/bin/python && pip install -r requirements.txt`;  
 3. `chmod +x bot.py`;  
 4. Copy `env_dist` to `.env` (with dot). **Warning**: files starting with dot are usually hidden in Linux, 

@@ -1,11 +1,5 @@
-# Your bot's token, get it from @BotFather
-BOT_TOKEN=123456:AbcdXyZ
-
-# Bot's language to use in messages (without quotes). Currently "en" and "ru" are built-in
+# rename this file to .env (with leading dot)
+BOT_TOKEN=12345:AaBbCcDdEeFfGgHhIiJjKk
 BOT_LANGUAGE=en
-
-# This is your "main" group where bot should operate as admin
-GROUP_MAIN = -1001234567
-
-# This is a special group for admins. Report messages will be sent here and everyone can choose any action!
-GROUP_REPORTS = -1007654321
+GROUP_MAIN=-100123456789
+GROUP_REPORTS=-100987654321
