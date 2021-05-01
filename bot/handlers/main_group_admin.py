@@ -46,11 +46,10 @@ async def cmd_ro(message: types.Message, lang: str):
         until_date=ro_end_date
     )
     if ro_period == 0:
-        await message.reply(get_string(lang, "readonly_forever"), parse_mode="HTML")
+        await message.reply(get_string(lang, "readonly_forever"))
     else:
         await message.reply(
-            get_string(lang, "readonly_temporary").format(time=ro_end_date.strftime("%d.%m.%Y %H:%M")),
-            parse_mode="HTML"
+            get_string(lang, "readonly_temporary").format(time=ro_end_date.strftime("%d.%m.%Y %H:%M"))
         )
 
 
@@ -76,11 +75,10 @@ async def cmd_nomedia(message: types.Message, lang: str):
         until_date=nomedia_end_date
     )
     if nomedia_period == 0:
-        await message.reply(get_string(lang, "nomedia_forever"), parse_mode="HTML")
+        await message.reply(get_string(lang, "nomedia_forever"))
     else:
         await message.reply(
-            get_string(lang, "nomedia_temporary").format(time=nomedia_end_date.strftime("%d.%m.%Y %H:%M")),
-            parse_mode="HTML"
+            get_string(lang, "nomedia_temporary").format(time=nomedia_end_date.strftime("%d.%m.%Y %H:%M"))
         )
 
 

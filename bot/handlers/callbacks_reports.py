@@ -22,15 +22,10 @@ async def callbacks_on_report_msg(call: types.CallbackQuery, callback_data: dict
 
     if option == "del":
         await call.message.edit_text(
-            call.message.html_text + get_string(lang, "action_deleted"),
-            parse_mode="HTML"
-        )
+            call.message.html_text + get_string(lang, "action_deleted"))
     elif option == "ban":
         await call.bot.kick_chat_member(config.group.main, user_id)
-        await call.message.edit_text(
-            call.message.html_text + get_string(lang, "action_deleted_banned"),
-            parse_mode="HTML"
-        )
+        await call.message.edit_text(call.message.html_text + get_string(lang, "action_deleted_banned"))
     await call.answer()
 
 

@@ -42,7 +42,7 @@ async def cmd_report(message: types.Message, config: Config, lang: str):
     if len(parts) == 2:
         report_msg_template += get_string(lang, "report_note").format(note=quote_html(parts[1]))
 
-    msg = await message.reply(get_string(lang, "report_sent"), parse_mode="HTML")
+    msg = await message.reply(get_string(lang, "report_sent"))
 
     kb = types.InlineKeyboardMarkup()
     for button_text, option in available_options.items():
@@ -61,7 +61,6 @@ async def cmd_report(message: types.Message, config: Config, lang: str):
             time=message.reply_to_message.date.strftime(get_string(lang, "report_date_format")),
             msg_url=get_message_url(message.chat.id, message.reply_to_message.message_id),
         ),
-        parse_mode="HTML",
         reply_markup=kb
     )
 
@@ -76,7 +75,7 @@ async def calling_all_units(message: types.Message, config: Config, lang: str):
     """
     msg_url = get_message_url(message.chat.id, message.message_id)
     text = get_string(lang, "need_admins_attention").format(msg_url=msg_url)
-    await message.bot.send_message(config.group.reports, text, parse_mode="HTML")
+    await message.bot.send_message(config.group.reports, text)
 
 
 def register_main_group_user(dp: Dispatcher, main_group_id: int):

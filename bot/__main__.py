@@ -48,7 +48,7 @@ async def main():
     # Reading config from env vars
     config = load_config()
 
-    bot = Bot(token=config.token)
+    bot = Bot(token=config.token, parse_mode="HTML")
     dp = Dispatcher(bot)
 
     # Register handlers
