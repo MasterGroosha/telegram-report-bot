@@ -1,5 +1,6 @@
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
+from aiogram.utils.markdown import quote_html
 from bot.common import report_msg_cb
 from bot.config_reader import Config
 from bot.localization import get_string
@@ -39,7 +40,7 @@ async def cmd_report(message: types.Message, config: Config, lang: str):
     parts = message.text.split(maxsplit=1)
     report_msg_template = get_string(lang, "report_message")
     if len(parts) == 2:
-        report_msg_template += get_string(lang, "report_note").format(note=parts[1])
+        report_msg_template += get_string(lang, "report_note").format(note=quote_html(parts[1]))
 
     msg = await message.reply(get_string(lang, "report_sent"), parse_mode="HTML")
 
