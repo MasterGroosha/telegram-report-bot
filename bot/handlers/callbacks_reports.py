@@ -1,4 +1,6 @@
+from contextlib import suppress
 from aiogram import types, Dispatcher
+from aiogram.utils.exceptions import MessageToDeleteNotFound
 from bot.common import report_msg_cb
 from bot.config_reader import Config
 from bot.localization import get_string
@@ -18,7 +20,8 @@ async def callbacks_on_report_msg(call: types.CallbackQuery, callback_data: dict
     message_ids = callback_data.get("message_ids")
 
     for msg_id in message_ids.split(","):
-        await call.bot.delete_message(config.group.main, msg_id)
+        with suppress(MessageToDeleteNotFound):
+            await call.bot.delete_message(config.group.main, msg_id)
 
     if option == "del":
         await call.message.edit_text(
