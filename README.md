@@ -8,7 +8,7 @@ The main goal is to build a bot with no external database needed. Thus, it may l
 
 #### Screenshot
 
-![Left - main group. Right - group for admins only](screenshots/cover.png)
+![Left - main group. Right - group for admins only. If you don't see this image, please check GitHub repo](screenshots/cover.png)
 
 #### Features
 * `/report` command to gather reports from users;  
