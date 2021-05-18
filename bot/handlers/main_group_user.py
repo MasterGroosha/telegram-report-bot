@@ -17,7 +17,7 @@ def get_message_url(chat_id, message_id):
 
 
 async def error_no_reply(message: types.Message):
-    lang = message.bot.get("config").get("lang")
+    lang = message.bot.get("config").lang
     await message.reply(get_string(lang, "error_no_reply"))
 
 

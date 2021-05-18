@@ -7,7 +7,7 @@ restriction_time_regex = re.compile(r'(\b[1-9][0-9]*)([mhd]\b)')
 
 
 async def error_no_reply(message: types.Message):
-    lang = message.bot.get("config").get("lang")
+    lang = message.bot.get("config").lang
     await message.reply(get_string(lang, "error_no_reply"))
 
 
@@ -31,7 +31,7 @@ async def cmd_ro(message: types.Message):
 
     :param message: Telegram message starting with /ro
     """
-    lang = message.bot.get("config").get("lang")
+    lang = message.bot.get("config").lang
     readonly_to = await message.chat.get_member(message.reply_to_message.from_user.id)
     if readonly_to.is_chat_admin():
         await message.reply(get_string(lang, "error_restrict_admin"))
@@ -60,7 +60,7 @@ async def cmd_nomedia(message: types.Message):
 
     :param message: Telegram message starting with /nomedia
     """
-    lang = message.bot.get("config").get("lang")
+    lang = message.bot.get("config").lang
     nomedia_to = await message.chat.get_member(message.reply_to_message.from_user.id)
     if nomedia_to.is_chat_admin():
         await message.reply(get_string(lang, "error_restrict_admin"))
