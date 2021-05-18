@@ -1,7 +1,6 @@
 from aiogram import types, Dispatcher
 from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted
 from bot.common import report_msg_cb
-from bot.config_reader import Config
 from bot.localization import get_string
 
 
@@ -11,8 +10,6 @@ async def callbacks_on_report_msg(call: types.CallbackQuery, callback_data: dict
 
     :param call: callback coming from Telegram
     :param callback_data: callback data parsed by aiogram
-    :param config: bot config
-    :param lang: preferred bot language
     """
     config = call.bot.get("config")
     option = callback_data.get("option", "del")
