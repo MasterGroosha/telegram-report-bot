@@ -15,6 +15,7 @@ strings = {
 
         "action_deleted": "\n\n🗑 <b>Deleted</b>",
         "action_deleted_banned": "\n\n🗑❌ <b>Deleted, user banned</b>",
+        "action_deleted_partially": "Some messages couldn't be found or deleted",
 
         "readonly_forever": "🙊 <i>User set to read-only mode forever</i>",
         "readonly_temporary": "🙊 <i>User set to read-only mode until {time} (server time)</i>",
@@ -40,6 +41,7 @@ strings = {
 
         "action_deleted": "\n\n🗑 <b>Удалено</b>",
         "action_deleted_banned": "\n\n🗑❌ <b>Удалено, юзер забанен</b>",
+        "action_deleted_partially": "Не удалось найти или удалить некоторые сообщения",
 
         "readonly_forever": "🙊 <i>Пользователь переведён в режим «только чтение» навсегда</i>",
         "readonly_temporary": "🙊 <i>Пользователь переведён в режим «только чтение» до {time} (время серверное)</i>",
