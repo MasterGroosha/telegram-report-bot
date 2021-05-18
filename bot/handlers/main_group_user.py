@@ -11,7 +11,7 @@ def get_message_url(chat_id, message_id):
     Get private link to message in group
     """
     return "t.me/c/{chat_id}/{message_id}".format(
-        chat_id=abs(chat_id+1_000_000_000_000),
+        chat_id=-1_000_000_000_000-chat_id,
         message_id=message_id
     )
 
