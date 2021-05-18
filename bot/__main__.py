@@ -5,7 +5,6 @@ from aiogram import Bot, Dispatcher
 from aiogram.types import BotCommand
 
 from bot.config_reader import load_config
-from bot.middlewares.config import ConfigMiddleware
 from bot.handlers.main_group_admin import register_main_group_admin
 from bot.handlers.main_group_user import register_main_group_user
 from bot.handlers.main_group_events import register_group_events
@@ -49,6 +48,7 @@ async def main():
     config = load_config()
 
     bot = Bot(token=config.token, parse_mode="HTML")
+    bot["config"] = config
     dp = Dispatcher(bot)
 
     # Register handlers
@@ -56,9 +56,6 @@ async def main():
     register_main_group_user(dp, main_group_id=config.group.main)
     register_group_events(dp, main_group_id=config.group.main)
     register_callbacks_reports(dp)
-
-    # Register middlewares
-    dp.middleware.setup(ConfigMiddleware(config))
 
     # Register /-commands in UI
     await set_bot_commands(bot)

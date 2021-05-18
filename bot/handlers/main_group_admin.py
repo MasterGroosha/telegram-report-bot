@@ -6,7 +6,8 @@ from bot.localization import get_string
 restriction_time_regex = re.compile(r'(\b[1-9][0-9]*)([mhd]\b)')
 
 
-async def error_no_reply(message: types.Message, lang: str):
+async def error_no_reply(message: types.Message):
+    lang = message.bot.get("config").get("lang")
     await message.reply(get_string(lang, "error_no_reply"))
 
 
@@ -24,13 +25,13 @@ def get_restriction_period(text: str) -> int:
     return 0
 
 
-async def cmd_ro(message: types.Message, lang: str):
+async def cmd_ro(message: types.Message):
     """
     Handle /ro command in main group
 
     :param message: Telegram message starting with /ro
-    :param lang: preferred bot language
     """
+    lang = message.bot.get("config").get("lang")
     readonly_to = await message.chat.get_member(message.reply_to_message.from_user.id)
     if readonly_to.is_chat_admin():
         await message.reply(get_string(lang, "error_restrict_admin"))
@@ -53,13 +54,13 @@ async def cmd_ro(message: types.Message, lang: str):
         )
 
 
-async def cmd_nomedia(message: types.Message, lang: str):
+async def cmd_nomedia(message: types.Message):
     """
     Handle /nomedia command in main group
 
     :param message: Telegram message starting with /nomedia
-    :param lang: preferred bot language
     """
+    lang = message.bot.get("config").get("lang")
     nomedia_to = await message.chat.get_member(message.reply_to_message.from_user.id)
     if nomedia_to.is_chat_admin():
         await message.reply(get_string(lang, "error_restrict_admin"))

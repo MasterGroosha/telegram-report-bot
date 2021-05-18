@@ -16,33 +16,33 @@ def get_message_url(chat_id, message_id):
     )
 
 
-async def error_no_reply(message: types.Message, lang: str):
+async def error_no_reply(message: types.Message):
+    lang = message.bot.get("config").get("lang")
     await message.reply(get_string(lang, "error_no_reply"))
 
 
-async def cmd_report(message: types.Message, config: Config, lang: str):
+async def cmd_report(message: types.Message):
     """
     Handle /report command in main group
 
     :param message: Telegram message starting with /report
-    :param config: bot config
-    :param lang: preferred bot language
     """
+    config = message.bot.get("config")
     reported = await message.chat.get_member(message.reply_to_message.from_user.id)
     if reported.is_chat_admin():
-        await message.reply(get_string(lang, "error_report_admin"))
+        await message.reply(get_string(config.lang, "error_report_admin"))
         return
 
     available_options = {
-        get_string(lang, "action_del_msg"): "del",
-        get_string(lang, "action_del_and_ban"): "ban"
+        get_string(config.lang, "action_del_msg"): "del",
+        get_string(config.lang, "action_del_and_ban"): "ban"
     }
     parts = message.text.split(maxsplit=1)
-    report_msg_template = get_string(lang, "report_message")
+    report_msg_template = get_string(config.lang, "report_message")
     if len(parts) == 2:
-        report_msg_template += get_string(lang, "report_note").format(note=quote_html(parts[1]))
+        report_msg_template += get_string(config.lang, "report_note").format(note=quote_html(parts[1]))
 
-    msg = await message.reply(get_string(lang, "report_sent"))
+    msg = await message.reply(get_string(config.lang, "report_sent"))
 
     kb = types.InlineKeyboardMarkup()
     for button_text, option in available_options.items():
@@ -58,23 +58,22 @@ async def cmd_report(message: types.Message, config: Config, lang: str):
     await message.bot.send_message(
         config.group.reports,
         report_msg_template.format(
-            time=message.reply_to_message.date.strftime(get_string(lang, "report_date_format")),
+            time=message.reply_to_message.date.strftime(get_string(config.lang, "report_date_format")),
             msg_url=get_message_url(message.chat.id, message.reply_to_message.message_id),
         ),
         reply_markup=kb
     )
 
 
-async def calling_all_units(message: types.Message, config: Config, lang: str):
+async def calling_all_units(message: types.Message):
     """
     Notifying all admins about something's going on in main group
 
     :param message: Telegram message starting with @admin
-    :param config: bot config
-    :param lang: preferred bot language
     """
+    config = message.bot.get("config")
     msg_url = get_message_url(message.chat.id, message.message_id)
-    text = get_string(lang, "need_admins_attention").format(msg_url=msg_url)
+    text = get_string(config.lang, "need_admins_attention").format(msg_url=msg_url)
     await message.bot.send_message(config.group.reports, text)
 
 
