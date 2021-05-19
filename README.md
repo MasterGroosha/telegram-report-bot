@@ -34,7 +34,7 @@ and **make bot an admin**. You also need to give it "Delete messages" permission
 
 ##### systemd
 1. Create a venv (virtual environment): `python3.9 -m venv venv` (or any other Python 3.7+ version);  
-2. `source venv/bin/python && pip install -r requirements.txt`;  
+2. `source venv/bin/activate && pip install -r requirements.txt`;  
 3. `chmod +x bot.py`;  
 4. Copy `env_dist` to `.env` (with dot). **Warning**: files starting with dot are usually hidden in Linux, 
 so don't worry if you stop seeing this file, it's still here!  
