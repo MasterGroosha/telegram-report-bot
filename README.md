@@ -34,16 +34,15 @@ and **make bot an admin**. You also need to give it "Delete messages" permission
 
 ##### systemd
 1. Create a venv (virtual environment): `python3.9 -m venv venv` (or any other Python 3.7+ version);  
-2. `source venv/bin/activate && pip install -r requirements.txt`;  
-3. `chmod +x bot.py`;  
-4. Copy `env_dist` to `.env` (with dot). **Warning**: files starting with dot are usually hidden in Linux, 
+2. `source venv/bin/activate && pip install -r requirements.txt`;
+3. Copy `env_dist` to `.env` (with dot). **Warning**: files starting with dot are usually hidden in Linux, 
 so don't worry if you stop seeing this file, it's still here!  
-5. Open `.env` file and set values for token, language and group IDs;  
-6. Rename  `reportbot.service.example` to `reportbot.service` and move it to `/etc/systemd/system`;  
-7. Open that file and change values for `WorkingDirectory`, `ExecStart` and `EnvironmentFile` providing the correct 
+4. Open `.env` file and set values for token, language and group IDs;  
+5. Rename  `reportbot.service.example` to `reportbot.service` and move it to `/etc/systemd/system`;  
+6. Open that file and change values for `WorkingDirectory`, `ExecStart` and `EnvironmentFile` providing the correct 
 path values;  
-8. Start your bot and enable its autostart: `sudo systemctl enable reportbot.service --now`;  
-9. Check your bot's status and logs: `systemctl status reportbot.service`.
+7. Start your bot and enable its autostart: `sudo systemctl enable reportbot.service --now`;  
+8. Check your bot's status and logs: `systemctl status reportbot.service`.
 
 ##### Docker
 1. Copy `env_dist` to `.env` (with dot). **Warning**: files starting with dot are usually hidden in Linux, 

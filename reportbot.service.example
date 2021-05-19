@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/telegram-report-bot/
-ExecStart=/opt/telegram-report-bot/venv/bin/python bot.py
+ExecStart=/opt/telegram-report-bot/venv/bin/python -m bot
 KillMode=process
 Restart=always
 RestartSec=10
