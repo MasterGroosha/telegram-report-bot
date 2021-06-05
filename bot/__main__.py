@@ -67,7 +67,13 @@ async def main():
     try:
         await dp.start_polling(allowed_updates=get_handled_updates_list(dp))
     finally:
-        await bot.close()
+        await dp.storage.close()
+        await dp.storage.wait_closed()
+        await bot.session.close()
 
 
-asyncio.run(main())
+if __name__ == '__main__':
+    try:
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        logger.error("Bot stopped!")
