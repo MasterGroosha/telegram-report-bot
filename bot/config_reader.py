@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from os import getenv
+from typing import Dict
 
 
 @dataclass
@@ -13,6 +14,7 @@ class Config:
     token: str
     lang: str
     group: Group
+    admins: Dict
 
 
 def load_config():
@@ -22,5 +24,6 @@ def load_config():
         group=Group(
             main=int(getenv("GROUP_MAIN")),
             reports=int(getenv("GROUP_REPORTS"))
-        )
+        ),
+        admins={}
     )
