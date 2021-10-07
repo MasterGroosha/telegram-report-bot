@@ -30,5 +30,4 @@ async def check_rights_and_permissions(bot: Bot, chat_id: int) -> Tuple[bool, Op
         return False, "Bot is not an administrator"
     if not chat_member_info.can_restrict_members or not chat_member_info.can_delete_messages:
         return False, "Bot needs 'restrict participants' and 'delete messages' permissions to work properly"
-    print(chat_member_info.status)
     return True, None
