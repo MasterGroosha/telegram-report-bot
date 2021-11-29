@@ -1,5 +1,6 @@
 # rename this file to .env (with leading dot)
 BOT_TOKEN=12345:AaBbCcDdEeFfGgHhIiJjKk
 BOT_LANGUAGE=en
+REPORT_MODE=group
 GROUP_MAIN=-100123456789
 GROUP_REPORTS=-100987654321

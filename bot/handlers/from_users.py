@@ -4,6 +4,7 @@ from aiogram import types, Bot
 from aiogram import html
 from aiogram.dispatcher.router import Router
 from aiogram.dispatcher.filters.command import Command
+from aiogram.exceptions import TelegramAPIError
 from magic_filter import F
 
 from bot.config_reader import Config
@@ -74,18 +75,33 @@ async def cmd_report(message: types.Message, config: Config, lang: Lang, bot: Bo
         return
     msg = await message.reply(lang.get("report_sent"))
 
-    await bot.forward_message(
-        chat_id=config.group.reports, from_chat_id=message.chat.id,
-        message_id=message.reply_to_message.message_id
-    )
-    await bot.send_message(
-        config.group.reports, text=make_report_message(message, lang),
-        reply_markup=make_report_keyboard(
-            user_id=message.reply_to_message.from_user.id,
-            message_ids=f"{message.message_id},{message.reply_to_message.message_id},{msg.message_id}",
-            lang=lang
-        )
-    )
+    # Get list of recipients.
+    # If report mode is "group", then only report group is used
+    # Otherwise, all admins who can delete messages and ban users
+    if config.report_mode == "group":
+        recipients = [config.group.reports]
+    else:
+        recipients = []
+        for admin_id, permissions in config.admins.items():
+            if admin_id != bot.id and permissions.get("can_restrict_members", False) is True:
+                recipients.append(admin_id)
+
+    for chat in recipients:
+        try:
+            await bot.forward_message(
+                chat_id=chat, from_chat_id=message.chat.id,
+                message_id=message.reply_to_message.message_id
+            )
+            await bot.send_message(
+                chat, text=make_report_message(message, lang),
+                reply_markup=make_report_keyboard(
+                    user_id=message.reply_to_message.from_user.id,
+                    message_ids=f"{message.message_id},{message.reply_to_message.message_id},{msg.message_id}",
+                    lang=lang
+                )
+            )
+        except TelegramAPIError as ex:
+            logger.error(f"[{type(ex).__name__}]: {str(ex)}")
 
 
 async def calling_all_units(message: types.Message, config: Config, lang: Lang, bot: Bot):

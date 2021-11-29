@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from os import getenv
-from typing import Dict
+from typing import Dict, Optional
 
 
 @dataclass
 class Group:
     main: int
-    reports: int
+    reports: Optional[int]
 
 
 @dataclass
@@ -15,6 +15,7 @@ class Config:
     lang: str
     group: Group
     admins: Dict
+    report_mode: str
 
 
 def load_config():
@@ -25,5 +26,6 @@ def load_config():
             main=int(getenv("GROUP_MAIN")),
             reports=int(getenv("GROUP_REPORTS"))
         ),
-        admins={}
+        admins={},
+        report_mode=getenv("REPORT_MODE", "private")
     )
