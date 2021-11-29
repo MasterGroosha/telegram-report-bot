@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from aiogram import types, Bot
 from aiogram import html
@@ -12,6 +13,26 @@ from bot.localization import Lang
 from bot.callback_factories import DeleteMsgCallback
 
 logger = logging.getLogger("report_bot")
+
+
+def get_report_chats(config: Config, bot_id: int) -> List[int]:
+    """
+    Get list of recipients to send report message to.
+    If report mode is "group", then only report group is used
+    Otherwise, all admins who can delete messages and ban users (except this bot)
+
+    :param config: config instance
+    :param bot_id: this bot's ID
+    :return: list of chat IDs to send messages to
+    """
+    if config.report_mode == "group":
+        return [config.group.reports]
+    else:
+        recipients = []
+        for admin_id, permissions in config.admins.items():
+            if admin_id != bot_id and permissions.get("can_restrict_members", False) is True:
+                recipients.append(admin_id)
+        return recipients
 
 
 def make_report_message(message: types.Message, lang: Lang):
@@ -75,18 +96,7 @@ async def cmd_report(message: types.Message, config: Config, lang: Lang, bot: Bo
         return
     msg = await message.reply(lang.get("report_sent"))
 
-    # Get list of recipients.
-    # If report mode is "group", then only report group is used
-    # Otherwise, all admins who can delete messages and ban users
-    if config.report_mode == "group":
-        recipients = [config.group.reports]
-    else:
-        recipients = []
-        for admin_id, permissions in config.admins.items():
-            if admin_id != bot.id and permissions.get("can_restrict_members", False) is True:
-                recipients.append(admin_id)
-
-    for chat in recipients:
+    for chat in get_report_chats(config, bot.id):
         try:
             await bot.forward_message(
                 chat_id=chat, from_chat_id=message.chat.id,
@@ -114,10 +124,10 @@ async def calling_all_units(message: types.Message, config: Config, lang: Lang, 
     :param lang: locale instance
     :param bot: bot instance
     """
-    await bot.send_message(
-        config.group.reports,
-        lang.get("need_admins_attention").format(msg_url=message.get_url(force_private=True))
-    )
+    for chat in get_report_chats(config, bot.id):
+        await bot.send_message(
+            chat, lang.get("need_admins_attention").format(msg_url=message.get_url(force_private=True))
+        )
 
 
 def register_from_users_handlers(router: Router):
