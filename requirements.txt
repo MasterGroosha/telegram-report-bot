@@ -1,2 +1,2 @@
 --pre
-aiogram==3.0a17
+aiogram==3.0a18
