@@ -12,7 +12,8 @@ async def on_user_join(message: types.Message):
     await message.delete()
 
 
-def register_group_join_handler(router: Router):
-    router.message.register(
-        on_user_join, ContentTypesFilter(content_types="new_chat_members")
-    )
+def register_group_join_handler(router: Router, remove_joins: bool):
+    if remove_joins is True:
+        router.message.register(
+            on_user_join, ContentTypesFilter(content_types="new_chat_members")
+        )

@@ -84,7 +84,7 @@ async def main():
     register_no_replies_handler(main_group_router, config)
     register_from_users_handlers(main_group_router)
     register_from_admins_handlers(main_group_router, config)
-    register_group_join_handler(main_group_router)
+    register_group_join_handler(main_group_router, config.remove_joins)
     register_admin_changes_handlers(main_group_router)
     register_callbacks(reports_group_router)
 
