@@ -65,4 +65,4 @@ class Lang:
             raise ValueError(f"No such language: {language_key}")
 
     def get(self, key):
-        return self.strings.get(self.chosen_lang).get(key, "%MISSING STRING%")
+        return self.strings.get(self.chosen_lang, {}).get(key, "%MISSING STRING%")
