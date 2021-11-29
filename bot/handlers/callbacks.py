@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import types, Bot
 from aiogram.exceptions import TelegramAPIError
 from aiogram.dispatcher.router import Router
@@ -5,6 +7,8 @@ from aiogram.dispatcher.router import Router
 from bot.config_reader import Config
 from bot.localization import Lang
 from bot.callback_factories import DeleteMsgCallback
+
+logger = logging.getLogger("report_bot")
 
 
 async def delmsg_callback(call: types.CallbackQuery, callback_data: DeleteMsgCallback,

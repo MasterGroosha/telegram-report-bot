@@ -16,7 +16,7 @@ from bot.handlers.callbacks import register_callbacks
 from bot.handlers.changing_admins import register_admin_changes_handlers
 from bot.localization import Lang
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("report_bot")
 
 
 async def set_bot_commands(bot: Bot):

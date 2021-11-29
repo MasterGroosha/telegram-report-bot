@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import types, Bot
 from aiogram import html
 from aiogram.dispatcher.router import Router
@@ -7,6 +9,8 @@ from magic_filter import F
 from bot.config_reader import Config
 from bot.localization import Lang
 from bot.callback_factories import DeleteMsgCallback
+
+logger = logging.getLogger("report_bot")
 
 
 def make_report_message(message: types.Message, lang: Lang):
