@@ -94,7 +94,7 @@ async def main():
     logger.info("Starting bot")
 
     # Start polling
-    # await dp.skip_updates()  # skip pending updates (optional)
+    # await bot.get_updates(offset=-1)  # skip pending updates (optional)
     await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(),
                            config=config, lang=lang)
 
