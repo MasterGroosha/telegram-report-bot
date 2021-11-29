@@ -4,10 +4,7 @@ services:
         image: groosha/telegram-report-bot:latest
         restart: always
         stop_signal: SIGINT
-        environment:
-            - BOT_TOKEN
-            - BOT_LANGUAGE
-            - GROUP_MAIN
-            - GROUP_REPORTS
+        env_file:
+            - .env
         volumes:
             - /etc/localtime:/etc/localtime:ro
