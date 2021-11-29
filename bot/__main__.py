@@ -52,19 +52,21 @@ async def main():
     ok, error = await check_rights_and_permissions(bot, config.group.main)
     if not ok:
         # Try to notify group admins about problems
+        error_msg = f"Error with main group: {error}"
         try:
-            await bot.send_message(config.group.reports, f"Error with main group: {error}")
+            await bot.send_message(config.group.reports, error_msg)
         finally:
-            print(f"Error with main group: {error}")
+            print(error_msg)
             return
 
     # Collect admins so that we don't have to fetch them every time
     ok, result = await fetch_admins(config, bot)
     if not ok:
+        error_msg = f"Error fetching main group admins: {error}"
         try:
-            await bot.send_message(config.group.reports, f"Error fetching main group admins: {error}")
+            await bot.send_message(config.group.reports, error_msg)
         finally:
-            print(f"Error fetching main group admins: {error}")
+            print(error_msg)
             return
     config.admins = result
 
