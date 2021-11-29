@@ -29,7 +29,7 @@ async def set_bot_commands(bot: Bot):
 
 async def main():
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.ERROR,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
 
