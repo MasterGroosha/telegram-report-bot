@@ -27,6 +27,8 @@ class Lang:
 
             "need_admins_attention": 'Dear admins, your presence in chat is needed!\n\n'
                                      '<a href="{msg_url}">Go to chat</a>',
+
+            "channels_not_allowed": "Sending messages on behalf of channels is not allowed in this group. Channel banned."
         },
         "ru": {
             "error_no_reply": "Эта команда должна быть ответом на какое-либо сообщение!",
@@ -55,6 +57,8 @@ class Lang:
 
             "need_admins_attention": 'Товарищи админы, в чате нужно ваше присутствие!\n\n'
                                      '<a href="{msg_url}">Перейти к чату</a>',
+
+            "channels_not_allowed": "В этой группе запрещено отправлять сообщения от имени канала. Сам канал забанен."
         },
     }
 

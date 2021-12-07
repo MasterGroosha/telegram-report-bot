@@ -17,6 +17,7 @@ class Config:
     admins: Dict
     report_mode: str
     remove_joins: bool
+    ban_channels: bool
 
 
 def load_config():
@@ -29,5 +30,6 @@ def load_config():
         ),
         admins={},
         report_mode=getenv("REPORT_MODE", "private"),
-        remove_joins=getenv("REMOVE_JOINS", "no") in ("1", "yes", "True")
+        remove_joins=getenv("REMOVE_JOINS", "no") in ("1", "yes", "True"),
+        ban_channels=getenv("BAN_CHANNELS", "no") in ("1", "yes", "True"),
     )
