@@ -24,6 +24,8 @@ class Lang:
             "readonly_temporary": "🙊 <i>User set to read-only mode until {time} (server time)</i>",
             "nomedia_forever": "🖼 <i>User set to text-only mode forever</i>",
             "nomedia_temporary": "🖼 <i>User set to text-only mode until {time} (server time)</i>",
+            "channel_banned_forever": "📛 <i>Channel banned forever</i>",
+            "channel_banned_temporary": "📛 <i>Channel banned until {time} (server time)</i>",
 
             "need_admins_attention": 'Dear admins, your presence in chat is needed!\n\n'
                                      '<a href="{msg_url}">Go to chat</a>',
@@ -54,6 +56,8 @@ class Lang:
             "readonly_temporary": "🙊 <i>Пользователь переведён в режим «только чтение» до {time} (время серверное)</i>",
             "nomedia_forever": "🖼 <i>Пользователю запрещено отправлять медиафайлы навсегда</i>",
             "nomedia_temporary": "🖼 <i>Пользователю запрещено отправлять медиафайлы до {time} (время серверное)</i>",
+            "channel_banned_forever": "📛 <i>Канал забанен навсегда</i>",
+            "channel_banned_temporary": "📛 <i>Канал забанен до {time} (время серверное)</i>",
 
             "need_admins_attention": 'Товарищи админы, в чате нужно ваше присутствие!\n\n'
                                      '<a href="{msg_url}">Перейти к чату</a>',
