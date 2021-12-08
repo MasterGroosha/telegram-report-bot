@@ -34,21 +34,14 @@ async def cmd_ro_or_nomedia(message: types.Message, config: Config, lang: Lang, 
         await message.reply(lang.get("error_cannot_restrict"))
         return
 
-    restriction_period = get_restriction_period(message.text)
-    restriction_end_date = message.date + timedelta(seconds=restriction_period)
-
     # If a message is sent on behalf of channel, then we can only ban it
     if message.reply_to_message.sender_chat is not None and message.is_automatic_forward is None:
-        await bot.ban_chat_sender_chat(
-            message.chat.id, message.reply_to_message.sender_chat.id, until_date=restriction_end_date
-        )
-        if restriction_period == 0:
-            await message.reply(lang.get("channel_banned_forever"))
-        else:
-            await message.reply(lang.get("channel_banned_temporary").format(
-                time=restriction_end_date.strftime("%d.%m.%Y %H:%M")
-            ))
+        await bot.ban_chat_sender_chat(message.chat.id, message.reply_to_message.sender_chat.id)
+        await message.reply(lang.get("channel_banned_forever"))
         return
+
+    restriction_period = get_restriction_period(message.text)
+    restriction_end_date = message.date + timedelta(seconds=restriction_period)
 
     is_ro = message.text.startswith("/ro")
     str_forever = "readonly_forever" if is_ro else "nomedia_forever"
