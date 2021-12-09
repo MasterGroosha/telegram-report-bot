@@ -36,17 +36,13 @@ async def main():
     # Reading config from env vars
     config = load_config()
 
-    # Define routers
-    # One router for events from "main" group,
-    # the other one for events from "reports" group
+    # Define the only router
     main_group_router = Router()
-    reports_group_router = Router()
 
     # Define bot, dispatcher and include routers to dispatcher
     bot = Bot(token=config.token, parse_mode="HTML")
     dp = Dispatcher()
     dp.include_router(main_group_router)
-    dp.include_router(reports_group_router)
 
     # Check that bot is admin in "main" group and has necessary permissions
     ok, error = await check_rights_and_permissions(bot, config.group.main)
@@ -78,7 +74,6 @@ async def main():
 
     # Restrict routers to corresponding chats
     main_group_router.message.filter(F.chat.id == config.group.main)
-    reports_group_router.message.filter(F.chat.id == config.group.reports)
 
     # Register handlers
     register_no_replies_handler(main_group_router, config)
@@ -86,7 +81,7 @@ async def main():
     register_from_admins_handlers(main_group_router, config)
     register_group_join_handler(main_group_router, config.remove_joins)
     register_admin_changes_handlers(main_group_router)
-    register_callbacks(reports_group_router)
+    register_callbacks(main_group_router)
 
     # Register /-commands in UI
     await set_bot_commands(bot)
