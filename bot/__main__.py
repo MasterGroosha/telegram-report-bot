@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
+from aiogram.exceptions import TelegramAPIError
 from aiogram.types import BotCommand
 from aiogram.dispatcher.router import Router
 from magic_filter import F
@@ -45,9 +46,9 @@ async def main():
     dp.include_router(main_group_router)
 
     # Check that bot is admin in "main" group and has necessary permissions
-    ok, error = await check_rights_and_permissions(bot, config.group.main)
-    if not ok:
-        # Try to notify group admins about problems
+    try:
+        await check_rights_and_permissions(bot, config.group.main)
+    except (TelegramAPIError, PermissionError) as error:
         error_msg = f"Error with main group: {error}"
         try:
             await bot.send_message(config.group.reports, error_msg)
@@ -56,8 +57,9 @@ async def main():
             return
 
     # Collect admins so that we don't have to fetch them every time
-    ok, result = await fetch_admins(config, bot)
-    if not ok:
+    try:
+        result = await fetch_admins(config, bot)
+    except TelegramAPIError as error:
         error_msg = f"Error fetching main group admins: {error}"
         try:
             await bot.send_message(config.group.reports, error_msg)
