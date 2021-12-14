@@ -3,7 +3,7 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.exceptions import TelegramAPIError
-from aiogram.types import BotCommand
+from aiogram.types import BotCommand, BotCommandScopeChat
 from aiogram.dispatcher.router import Router
 from magic_filter import F
 
@@ -18,12 +18,11 @@ from bot.handlers.changing_admins import register_admin_changes_handlers
 from bot.localization import Lang
 
 
-async def set_bot_commands(bot: Bot):
-    # TODO: set narrower scopes
+async def set_bot_commands(bot: Bot, main_group_id: int):
     commands = [
         BotCommand(command="report", description="Report message to group admins"),
     ]
-    await bot.set_my_commands(commands)
+    await bot.set_my_commands(commands, scope=BotCommandScopeChat(chat_id=main_group_id))
 
 
 async def main():
@@ -84,7 +83,7 @@ async def main():
     register_callbacks(main_group_router)
 
     # Register /-commands in UI
-    await set_bot_commands(bot)
+    await set_bot_commands(bot, config.group.main)
 
     logging.info("Starting bot")
 
