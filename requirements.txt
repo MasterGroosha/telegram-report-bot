@@ -1,2 +1,2 @@
 --pre
-git+https://github.com/MasterGroosha/aiogram.git@dev-3.x-botapi-5.5
+aiogram==3.0.0b1
