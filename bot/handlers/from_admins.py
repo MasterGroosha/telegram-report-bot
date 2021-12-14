@@ -35,7 +35,7 @@ async def cmd_ro_or_nomedia(message: types.Message, config: Config, lang: Lang, 
         return
 
     # If a message is sent on behalf of channel, then we can only ban it
-    if message.reply_to_message.sender_chat is not None and message.is_automatic_forward is None:
+    if message.reply_to_message.sender_chat is not None and message.reply_to_message.is_automatic_forward is None:
         await bot.ban_chat_sender_chat(message.chat.id, message.reply_to_message.sender_chat.id)
         await message.reply(lang.get("channel_banned_forever"))
         return
