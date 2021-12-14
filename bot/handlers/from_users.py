@@ -130,17 +130,19 @@ async def calling_all_units(message: types.Message, config: Config, lang: Lang, 
         )
 
 
-async def any_message_from_channel(message: types.Message, config: Config, lang: Lang, bot: Bot):
+async def any_message_from_channel(message: types.Message, lang: Lang, bot: Bot):
     """
     Handle messages sent on behalf of some channels
     Read more: https://telegram.org/blog/protected-content-delete-by-date-and-more#anonymous-posting-in-public-groups
 
     :param message: Telegram message send on behalf of some channel
-    :param config: config instance
     :param lang: locale instance
     :param bot: bot instance
     """
-    if config.ban_channels is True and message.is_automatic_forward is None:
+
+    # If is_automatic_forward is not None, then this is post from linked channel, which shouldn't be banned
+    # If message.sender_chat.id == message.chat.id, then this is an anonymous admin, who shouldn't be banned either
+    if message.is_automatic_forward is None and message.sender_chat.id != message.chat.id:
         await message.answer(lang.get("channels_not_allowed"))
         await bot.ban_chat_sender_chat(message.chat.id, message.sender_chat.id)
         await message.delete()
@@ -149,4 +151,4 @@ async def any_message_from_channel(message: types.Message, config: Config, lang:
 def register_from_users_handlers(router: Router):
     router.message.register(cmd_report, Command(commands="report"), F.reply_to_message)
     router.message.register(calling_all_units, F.text.startswith("@admin"))
-    router.message.register(any_message_from_channel, F.sender_chat)
+    router.message.register(any_message_from_channel, F.sender_chat, magic_data=F.config.ban_channels.is_(True))
