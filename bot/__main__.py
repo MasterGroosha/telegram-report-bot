@@ -17,8 +17,6 @@ from bot.handlers.callbacks import register_callbacks
 from bot.handlers.changing_admins import register_admin_changes_handlers
 from bot.localization import Lang
 
-logger = logging.getLogger("report_bot")
-
 
 async def set_bot_commands(bot: Bot):
     # TODO: set narrower scopes
@@ -88,7 +86,7 @@ async def main():
     # Register /-commands in UI
     await set_bot_commands(bot)
 
-    logger.info("Starting bot")
+    logging.info("Starting bot")
 
     # Start polling
     # await bot.get_updates(offset=-1)  # skip pending updates (optional)
@@ -100,4 +98,4 @@ if __name__ == '__main__':
     try:
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
-        logger.error("Bot stopped!")
+        logging.error("Bot stopped!")
