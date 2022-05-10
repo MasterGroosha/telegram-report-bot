@@ -1,16 +1,16 @@
 import logging
-from typing import List
+from typing import List, Union
 
-from aiogram import types, Bot
-from aiogram import html
-from aiogram.dispatcher.router import Router
+from aiogram import types, Bot, html, F
 from aiogram.dispatcher.filters.command import Command
+from aiogram.dispatcher.router import Router
 from aiogram.exceptions import TelegramAPIError
-from magic_filter import F
+from aiogram.types import Chat, User
+from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup
 
+from bot.callback_factories import DeleteMsgCallback
 from bot.config_reader import config
 from bot.localization import Lang
-from bot.callback_factories import DeleteMsgCallback
 
 logger = logging.getLogger("report_bot")
 
@@ -53,32 +53,38 @@ def make_report_message(message: types.Message, lang: Lang):
     return msg
 
 
-def make_report_keyboard(user_id: int, message_ids: str, lang: Lang):
+def make_report_keyboard(entity_id: int, message_ids: str, lang: Lang) -> InlineKeyboardMarkup:
     """
-    Prepare report message keyboard. Currently it includes two buttons:
+    Prepare report message keyboard. Currently, it includes two buttons:
     one simply deletes original message, report message and report confirmation message,
     the other also bans author of original message which was reported
 
-    :param user_id: Telegram ID of user who may be banned from group chat
+    :param entity_id: Telegram ID of user who may be banned from group chat
     :param message_ids: IDs of original message, report message and report confirmation message
     :param lang: locale instance
     :return: inline keyboard with these two buttons
     """
-    markup = [
-        [types.InlineKeyboardButton(
-            text=lang.get("action_del_msg"),
-            callback_data=DeleteMsgCallback(
-                option="del", user_id=user_id, message_ids=message_ids
-            ).pack()
-        )],
-        [types.InlineKeyboardButton(
-            text=lang.get("action_del_and_ban"),
-            callback_data=DeleteMsgCallback(
-                option="ban", user_id=user_id, message_ids=message_ids
-            ).pack()
-        )],
-    ]
-    return types.InlineKeyboardMarkup(inline_keyboard=markup)
+    keyboard = InlineKeyboardBuilder()
+    # First button: delete messages only
+    keyboard.button(
+        text=lang.get("action_del_msg"),
+        callback_data=DeleteMsgCallback(
+            action="del",
+            entity_id=entity_id,
+            message_ids=message_ids
+        )
+    )
+    # Second button: delete messages and ban user or channel (user writing on behalf of channel)
+    keyboard.button(
+        text=lang.get("action_del_and_ban"),
+        callback_data=DeleteMsgCallback(
+            action="ban",
+            entity_id=entity_id,
+            message_ids=message_ids
+        )
+    )
+    keyboard.adjust(1)
+    return keyboard.as_markup()
 
 
 async def cmd_report(message: types.Message, lang: Lang, bot: Bot):
@@ -90,21 +96,34 @@ async def cmd_report(message: types.Message, lang: Lang, bot: Bot):
     :param lang: locale instance
     :param bot: bot instance
     """
-    if message.reply_to_message.from_user.id in config.admins.keys():
+
+    replied_msg = message.reply_to_message
+    reported_chat: Union[Chat, User] = replied_msg.sender_chat or replied_msg.from_user
+
+    if isinstance(reported_chat, User) and reported_chat.id in config.admins.keys():
         await message.reply(lang.get("error_report_admin"))
         return
+    else:
+        if replied_msg.is_automatic_forward:
+            await message.reply(lang.get("error_cannot_report_linked"))
+            return
+        if reported_chat.id == message.chat.id:
+            await message.reply(lang.get("error_report_admin"))
+            return
+
     msg = await message.reply(lang.get("report_sent"))
 
-    for chat in get_report_chats(bot.id):
+    for report_chat in get_report_chats(bot.id):
         try:
             await bot.forward_message(
-                chat_id=chat, from_chat_id=message.chat.id,
+                chat_id=report_chat, from_chat_id=message.chat.id,
                 message_id=message.reply_to_message.message_id
             )
+
             await bot.send_message(
-                chat, text=make_report_message(message, lang),
+                report_chat, text=make_report_message(message, lang),
                 reply_markup=make_report_keyboard(
-                    user_id=message.reply_to_message.from_user.id,
+                    entity_id=reported_chat.id,
                     message_ids=f"{message.message_id},{message.reply_to_message.message_id},{msg.message_id}",
                     lang=lang
                 )

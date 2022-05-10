@@ -13,7 +13,7 @@ logger = logging.getLogger("report_bot")
 
 async def delmsg_callback(call: types.CallbackQuery, callback_data: DeleteMsgCallback,
                           lang: Lang, bot: Bot):
-    delete_ok = True
+    delete_ok: bool = True
     for msg_id in callback_data.message_ids.split(","):
         try:
             await bot.delete_message(config.group_main, int(msg_id))
@@ -22,14 +22,20 @@ async def delmsg_callback(call: types.CallbackQuery, callback_data: DeleteMsgCal
             logger.error(f"[{type(ex).__name__}]: {str(ex)}")
             delete_ok = False
 
-    if callback_data.option == "del":
+    if callback_data.action == "del":
         await call.message.edit_text(call.message.html_text + lang.get("action_deleted"))
-    elif callback_data.option == "ban":
+    elif callback_data.action == "ban":
         try:
-            await bot.ban_chat_member(config.group_main, callback_data.user_id)
+            # if a channel was reported
+            if callback_data.entity_id < 0:
+                await bot.ban_chat_sender_chat(config.group_main, callback_data.entity_id)
+            # if a user was reported
+            else:
+                await bot.ban_chat_member(config.group_main, callback_data.entity_id)
             await call.message.edit_text(call.message.html_text + lang.get("action_deleted_banned"))
         except TelegramAPIError as ex:
             logger.error(f"[{type(ex).__name__}]: {str(ex)}")
+            delete_ok = False
 
     if delete_ok:
         await call.answer()

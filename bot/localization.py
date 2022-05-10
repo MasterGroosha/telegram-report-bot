@@ -5,6 +5,7 @@ class Lang:
             "error_report_admin": "Whoa! Don't report admins 😈",
             "error_restrict_admin": "You cannot restrict an admin.",
             "error_cannot_restrict": "You are not allowed to restrict users",
+            "error_cannot_report_linked": "You cannot report messages from linked channel",
 
             "report_date_format": "%d.%m.%Y at %H:%M",
             "report_message": '👆 Sent {time} (server time)\n'
@@ -16,7 +17,7 @@ class Lang:
             "action_del_and_ban": "Delete and ban",
 
             "action_deleted": "\n\n🗑 <b>Deleted</b>",
-            "action_deleted_banned": "\n\n🗑❌ <b>Deleted, user banned</b>",
+            "action_deleted_banned": "\n\n🗑❌ <b>Deleted, user or chat banned</b>",
             "action_deleted_partially": "Some messages couldn't be found or deleted. "
                                         "Perhaps they were deleted by another admin.",
 
@@ -36,6 +37,7 @@ class Lang:
             "error_report_admin": "Админов репортишь? Ай-ай-ай 😈",
             "error_restrict_admin": "Невозможно ограничить администратора.",
             "error_cannot_restrict": "У вас нет права ограничивать пользователей",
+            "error_cannot_report_linked": "Нельзя жаловаться на сообщения из привязанного канала",
 
             "report_date_format": "%d.%m.%Y в %H:%M",
             "report_message": '👆 Отправлено {time} (время серверное)\n'
@@ -47,7 +49,7 @@ class Lang:
             "action_del_and_ban": "Удалить и забанить",
 
             "action_deleted": "\n\n🗑 <b>Удалено</b>",
-            "action_deleted_banned": "\n\n🗑❌ <b>Удалено, юзер забанен</b>",
+            "action_deleted_banned": "\n\n🗑❌ <b>Удалено, юзер или чат забанен</b>",
             "action_deleted_partially": "Не удалось найти или удалить некоторые сообщения. "
                                         "Возможно, они уже были удалены другим админом.",
 
