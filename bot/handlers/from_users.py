@@ -1,8 +1,8 @@
 import logging
-from typing import List, Union
+from typing import List, Union, Optional
 
 from aiogram import types, Bot, html, F, Router
-from aiogram.dispatcher.filters.command import Command
+from aiogram.dispatcher.filters.command import Command, CommandObject
 from aiogram.exceptions import TelegramAPIError
 from aiogram.types import Chat, User
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup
@@ -34,22 +34,22 @@ def get_report_chats(bot_id: int) -> List[int]:
         return recipients
 
 
-def make_report_message(message: types.Message, lang: Lang):
+def make_report_message(reported_message: types.Message, comment: Optional[str], lang: Lang):
     """
-    Prepare report message format. This includes original (reported) message datetime,
+    Prepare report message text. This includes original (reported) message datetime,
     message private URL (even for public groups) and optional notes from user who made the report
 
-    :param message: Telegram message with /report command
+    :param reported_message: Telegram message which was reported with /report command
+    :param comment: optional command arguments as command
     :param lang: locale instance
     :return: formatted report message text
     """
     msg = lang.get("report_message").format(
-        time=message.reply_to_message.date.strftime(lang.get("report_date_format")),
-        msg_url=message.reply_to_message.get_url(force_private=True)
+        time=reported_message.date.strftime(lang.get("report_date_format")),
+        msg_url=reported_message.get_url(force_private=True)
     )
-    parts = message.text.split(maxsplit=1)
-    if len(parts) == 2:
-        msg += lang.get("report_note").format(note=html.quote(parts[1]))
+    if comment is not None:
+        msg += lang.get("report_note").format(note=html.quote(comment))
     return msg
 
 
@@ -88,14 +88,14 @@ def make_report_keyboard(entity_id: int, message_ids: str, lang: Lang) -> Inline
 
 
 @router.message(Command(commands="report"), F.reply_to_message)
-async def cmd_report(message: types.Message, lang: Lang, bot: Bot):
+async def cmd_report(message: types.Message, lang: Lang, bot: Bot, command: CommandObject):
     """
     Handle /report command in main group
 
     :param message: Telegram message with /report command
-    :param config: config instance
     :param lang: locale instance
     :param bot: bot instance
+    :param command: command info to extract arguments from
     """
 
     replied_msg = message.reply_to_message
@@ -122,7 +122,7 @@ async def cmd_report(message: types.Message, lang: Lang, bot: Bot):
             )
 
             await bot.send_message(
-                report_chat, text=make_report_message(message, lang),
+                report_chat, text=make_report_message(message.reply_to_message, command.args, lang),
                 reply_markup=make_report_keyboard(
                     entity_id=reported_chat.id,
                     message_ids=f"{message.message_id},{message.reply_to_message.message_id},{msg.message_id}",
