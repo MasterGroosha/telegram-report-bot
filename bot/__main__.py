@@ -4,17 +4,10 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.exceptions import TelegramAPIError
 from aiogram.types import BotCommand, BotCommandScopeChat
-from aiogram.dispatcher.router import Router
-from magic_filter import F
 
-from bot.config_reader import config
 from bot.before_start import fetch_admins, check_rights_and_permissions
-from bot.handlers.not_replies import register_no_replies_handler
-from bot.handlers.from_users import register_from_users_handlers
-from bot.handlers.from_admins import register_from_admins_handlers
-from bot.handlers.group_join import register_group_join_handler
-from bot.handlers.callbacks import register_callbacks
-from bot.handlers.changing_admins import register_admin_changes_handlers
+from bot.config_reader import config
+from bot.handlers import setup_routers
 from bot.localization import Lang
 
 
@@ -31,13 +24,9 @@ async def main():
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
 
-    # Define the only router
-    main_group_router = Router()
-
     # Define bot, dispatcher and include routers to dispatcher
     bot = Bot(token=config.bot_token, parse_mode="HTML")
     dp = Dispatcher()
-    dp.include_router(main_group_router)
 
     # Check that bot is admin in "main" group and has necessary permissions
     try:
@@ -68,16 +57,9 @@ async def main():
         print(f"Error no localization found for language code: {config.lang}")
         return
 
-    # Restrict routers to corresponding chats
-    main_group_router.message.filter(F.chat.id == config.group_main)
-
     # Register handlers
-    register_no_replies_handler(main_group_router)
-    register_from_users_handlers(main_group_router)
-    register_from_admins_handlers(main_group_router)
-    register_group_join_handler(main_group_router, config.remove_joins)
-    register_admin_changes_handlers(main_group_router)
-    register_callbacks(main_group_router)
+    router = setup_routers()
+    dp.include_router(router)
 
     # Register /-commands in UI
     await set_bot_commands(bot, config.group_main)
@@ -86,8 +68,7 @@ async def main():
 
     # Start polling
     # await bot.get_updates(offset=-1)  # skip pending updates (optional)
-    await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(),
-                           config=config, lang=lang)
+    await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), lang=lang)
 
 
 if __name__ == '__main__':

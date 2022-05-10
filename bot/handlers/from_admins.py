@@ -1,15 +1,15 @@
 import re
 from datetime import timedelta
 
-from aiogram import types, Bot
-from aiogram.dispatcher.router import Router
+from aiogram import types, Bot, Router, F
 from aiogram.dispatcher.filters.command import Command
-from magic_filter import F
 
 from bot.config_reader import config
 from bot.localization import Lang
 
 restriction_time_regex = re.compile(r'(\b[1-9][0-9]*)([mhd]\b)')
+
+router = Router()
 
 
 def get_restriction_period(text: str) -> int:
@@ -26,6 +26,7 @@ def get_restriction_period(text: str) -> int:
     return 0
 
 
+@router.message(Command(commands=["ro", "nm"]), F.reply_to_message, F.from_user.id.in_(config.admins.keys()))
 async def cmd_ro_or_nomedia(message: types.Message, lang: Lang, bot: Bot):
     if message.reply_to_message.from_user.id in config.admins.keys():
         await message.reply(lang.get("error_restrict_admin"))
@@ -61,8 +62,3 @@ async def cmd_ro_or_nomedia(message: types.Message, lang: Lang, bot: Bot):
         await message.reply(lang.get(str_temporary).format(
             time=restriction_end_date.strftime("%d.%m.%Y %H:%M")
         ))
-
-
-def register_from_admins_handlers(router: Router):
-    router.message.register(cmd_ro_or_nomedia, Command(commands=["ro", "nm"]),
-                            F.reply_to_message, F.from_user.id.in_(config.admins.keys()))

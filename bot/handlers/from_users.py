@@ -1,9 +1,8 @@
 import logging
 from typing import List, Union
 
-from aiogram import types, Bot, html, F
+from aiogram import types, Bot, html, F, Router
 from aiogram.dispatcher.filters.command import Command
-from aiogram.dispatcher.router import Router
 from aiogram.exceptions import TelegramAPIError
 from aiogram.types import Chat, User
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup
@@ -13,6 +12,7 @@ from bot.config_reader import config
 from bot.localization import Lang
 
 logger = logging.getLogger("report_bot")
+router = Router()
 
 
 def get_report_chats(bot_id: int) -> List[int]:
@@ -87,6 +87,7 @@ def make_report_keyboard(entity_id: int, message_ids: str, lang: Lang) -> Inline
     return keyboard.as_markup()
 
 
+@router.message(Command(commands="report"), F.reply_to_message)
 async def cmd_report(message: types.Message, lang: Lang, bot: Bot):
     """
     Handle /report command in main group
@@ -132,13 +133,13 @@ async def cmd_report(message: types.Message, lang: Lang, bot: Bot):
             logger.error(f"[{type(ex).__name__}]: {str(ex)}")
 
 
+@router.message(F.text.startswith("@admin"))
 async def calling_all_units(message: types.Message, lang: Lang, bot: Bot):
     """
     Handle messages starting with "@admin". No additional checks are done, so
     "@admin", "@admin!!!", "@administrator" and other are valid
 
     :param message: Telegram message with /report command
-    :param config: config instance
     :param lang: locale instance
     :param bot: bot instance
     """
@@ -148,6 +149,7 @@ async def calling_all_units(message: types.Message, lang: Lang, bot: Bot):
         )
 
 
+@router.message(F.sender_chat, lambda x: config.ban_channels is True)
 async def any_message_from_channel(message: types.Message, lang: Lang, bot: Bot):
     """
     Handle messages sent on behalf of some channels
@@ -164,9 +166,3 @@ async def any_message_from_channel(message: types.Message, lang: Lang, bot: Bot)
         await message.answer(lang.get("channels_not_allowed"))
         await bot.ban_chat_sender_chat(message.chat.id, message.sender_chat.id)
         await message.delete()
-
-
-def register_from_users_handlers(router: Router):
-    router.message.register(cmd_report, Command(commands="report"), F.reply_to_message)
-    router.message.register(calling_all_units, F.text.startswith("@admin"))
-    router.message.register(any_message_from_channel, F.sender_chat, magic_data=F.config.ban_channels.is_(True))

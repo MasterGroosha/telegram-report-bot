@@ -1,8 +1,9 @@
-from aiogram import types
-from aiogram.dispatcher.router import Router
-from aiogram.dispatcher.filters.content_types import ContentTypesFilter
+from aiogram import types, Router, F
+
+router = Router()
 
 
+@router.message(F.new_chat_member, F.config.re.is_(True))
 async def on_user_join(message: types.Message):
     """
     Delete "user joined" service messages
@@ -10,10 +11,3 @@ async def on_user_join(message: types.Message):
     :param message: a service message from Telegram "<user> joined the group"
     """
     await message.delete()
-
-
-def register_group_join_handler(router: Router, remove_joins: bool):
-    if remove_joins is True:
-        router.message.register(
-            on_user_join, ContentTypesFilter(content_types="new_chat_members")
-        )

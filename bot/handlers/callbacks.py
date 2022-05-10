@@ -1,16 +1,17 @@
 import logging
 
-from aiogram import types, Bot
+from aiogram import types, Bot, Router
 from aiogram.exceptions import TelegramAPIError
-from aiogram.dispatcher.router import Router
 
 from bot.config_reader import config
 from bot.localization import Lang
 from bot.callback_factories import DeleteMsgCallback
 
 logger = logging.getLogger("report_bot")
+router = Router()
 
 
+@router.callback_query(DeleteMsgCallback.filter())
 async def delmsg_callback(call: types.CallbackQuery, callback_data: DeleteMsgCallback,
                           lang: Lang, bot: Bot):
     delete_ok: bool = True
@@ -41,7 +42,3 @@ async def delmsg_callback(call: types.CallbackQuery, callback_data: DeleteMsgCal
         await call.answer()
     else:
         await call.answer(show_alert=True, text=lang.get("action_deleted_partially"))
-
-
-def register_callbacks(router: Router):
-    router.callback_query.register(delmsg_callback, DeleteMsgCallback.filter())
