@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     def validate_group_reports(cls, v, values):
         if values.get("report_mode") == "group" and v is None:
             raise ValueError("Reports group ID not set")
+        return v
 
     class Config:
         env_file = '.env'
