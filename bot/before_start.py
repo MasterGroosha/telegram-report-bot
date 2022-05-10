@@ -1,16 +1,17 @@
-from typing import Dict
+from typing import Dict, List, Union
 
 from aiogram import Bot
-from aiogram.types import ChatMemberAdministrator
+from aiogram.types import ChatMemberAdministrator, ChatMemberOwner
 
 from bot.config_reader import config
 
 
 async def fetch_admins(bot: Bot) -> Dict:
     result = {}
+    admins: List[Union[ChatMemberOwner, ChatMemberAdministrator]]
     admins = await bot.get_chat_administrators(config.group_main)
     for admin in admins:
-        if admin.status == "creator":
+        if isinstance(admin, ChatMemberOwner):
             result[admin.user.id] = {"can_restrict_members": True}
         else:
             result[admin.user.id] = {"can_restrict_members": admin.can_restrict_members}
