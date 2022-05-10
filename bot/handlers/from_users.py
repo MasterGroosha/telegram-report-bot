@@ -25,7 +25,7 @@ def get_report_chats(bot_id: int) -> List[int]:
     :return: list of chat IDs to send messages to
     """
     if config.report_mode == "group":
-        return [config.group.reports]
+        return [config.group_reports]
     else:
         recipients = []
         for admin_id, permissions in config.admins.items():

@@ -16,7 +16,7 @@ async def delmsg_callback(call: types.CallbackQuery, callback_data: DeleteMsgCal
     delete_ok = True
     for msg_id in callback_data.message_ids.split(","):
         try:
-            await bot.delete_message(config.group.main, int(msg_id))
+            await bot.delete_message(config.group_main, int(msg_id))
         except TelegramAPIError as ex:
             # Todo: better pointer at message which caused this error
             logger.error(f"[{type(ex).__name__}]: {str(ex)}")
@@ -26,7 +26,7 @@ async def delmsg_callback(call: types.CallbackQuery, callback_data: DeleteMsgCal
         await call.message.edit_text(call.message.html_text + lang.get("action_deleted"))
     elif callback_data.option == "ban":
         try:
-            await bot.ban_chat_member(config.group.main, callback_data.user_id)
+            await bot.ban_chat_member(config.group_main, callback_data.user_id)
             await call.message.edit_text(call.message.html_text + lang.get("action_deleted_banned"))
         except TelegramAPIError as ex:
             logger.error(f"[{type(ex).__name__}]: {str(ex)}")

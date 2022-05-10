@@ -8,7 +8,7 @@ from bot.config_reader import config
 
 async def fetch_admins(bot: Bot) -> Dict:
     result = {}
-    admins = await bot.get_chat_administrators(config.group.main)
+    admins = await bot.get_chat_administrators(config.group_main)
     for admin in admins:
         if admin.status == "creator":
             result[admin.user.id] = {"can_restrict_members": True}

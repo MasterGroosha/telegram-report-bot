@@ -41,11 +41,11 @@ async def main():
 
     # Check that bot is admin in "main" group and has necessary permissions
     try:
-        await check_rights_and_permissions(bot, config.group.main)
+        await check_rights_and_permissions(bot, config.group_main)
     except (TelegramAPIError, PermissionError) as error:
         error_msg = f"Error with main group: {error}"
         try:
-            await bot.send_message(config.group.reports, error_msg)
+            await bot.send_message(config.group_reports, error_msg)
         finally:
             print(error_msg)
             return
@@ -56,7 +56,7 @@ async def main():
     except TelegramAPIError as error:
         error_msg = f"Error fetching main group admins: {error}"
         try:
-            await bot.send_message(config.group.reports, error_msg)
+            await bot.send_message(config.group_reports, error_msg)
         finally:
             print(error_msg)
             return
@@ -69,7 +69,7 @@ async def main():
         return
 
     # Restrict routers to corresponding chats
-    main_group_router.message.filter(F.chat.id == config.group.main)
+    main_group_router.message.filter(F.chat.id == config.group_main)
 
     # Register handlers
     register_no_replies_handler(main_group_router)
@@ -80,7 +80,7 @@ async def main():
     register_callbacks(main_group_router)
 
     # Register /-commands in UI
-    await set_bot_commands(bot, config.group.main)
+    await set_bot_commands(bot, config.group_main)
 
     logging.info("Starting bot")
 
