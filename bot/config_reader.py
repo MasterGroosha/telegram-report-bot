@@ -1,35 +1,39 @@
-from dataclasses import dataclass
-from os import getenv
-from typing import Dict, Optional
+from typing import Optional
+
+from pydantic import BaseSettings, validator
 
 
-@dataclass
-class Group:
-    main: int
-    reports: Optional[int]
-
-
-@dataclass
-class Config:
-    token: str
+class Settings(BaseSettings):
+    bot_token: str
     lang: str
-    group: Group
-    admins: Dict
     report_mode: str
+    group_main: int
+    group_reports: Optional[int]
+    admins: dict = {}
     remove_joins: bool
     ban_channels: bool
 
+    @validator("lang")
+    def validate_lang(cls, v):
+        if v not in ("en", "ru"):
+            raise ValueError("Incorrect value. Must be one of: en, ru")
+        return v
 
-def load_config():
-    return Config(
-        token=getenv("BOT_TOKEN"),
-        lang=getenv("BOT_LANGUAGE"),
-        group=Group(
-            main=int(getenv("GROUP_MAIN")),
-            reports=int(getenv("GROUP_REPORTS"))
-        ),
-        admins={},
-        report_mode=getenv("REPORT_MODE", "private"),
-        remove_joins=getenv("REMOVE_JOINS", "no") in ("1", "yes", "True"),
-        ban_channels=getenv("BAN_CHANNELS", "no") in ("1", "yes", "True"),
-    )
+    @validator("report_mode")
+    def validate_report_mode(cls, v):
+        if v not in ("group", "private"):
+            raise ValueError("Incorrect value. Must be one of: group, private")
+        return v
+
+    @validator("group_reports")
+    def validate_group_reports(cls, v, values):
+        if values.get("report_mode") == "group" and v is None:
+            raise ValueError("Reports group ID not set")
+
+    class Config:
+        env_file = '.env'
+        env_file_encoding = 'utf-8'
+        env_nested_delimiter = '__'
+
+
+config = Settings()

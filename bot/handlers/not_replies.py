@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters.command import Command
 from magic_filter import F
 
 from bot.localization import Lang
-from bot.config_reader import Config
+from bot.config_reader import config
 
 
 async def no_reply(message: types.Message, lang: Lang):
@@ -17,7 +17,7 @@ async def no_reply(message: types.Message, lang: Lang):
     await message.reply(lang.get("error_no_reply"))
 
 
-def register_no_replies_handler(router: Router, config: Config):
+def register_no_replies_handler(router: Router):
     router.message.register(no_reply, Command(commands=["report"]), ~F.reply_to_message)
     router.message.register(no_reply, Command(commands=["ro", "nm"]),
                             F.from_user.id.in_(config.admins.keys()), ~F.reply_to_message)

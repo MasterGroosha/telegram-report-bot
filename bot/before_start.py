@@ -3,10 +3,10 @@ from typing import Dict
 from aiogram import Bot
 from aiogram.types import ChatMemberAdministrator
 
-from bot.config_reader import Config
+from bot.config_reader import config
 
 
-async def fetch_admins(config: Config, bot: Bot) -> Dict:
+async def fetch_admins(bot: Bot) -> Dict:
     result = {}
     admins = await bot.get_chat_administrators(config.group.main)
     for admin in admins:

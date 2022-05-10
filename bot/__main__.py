@@ -7,7 +7,7 @@ from aiogram.types import BotCommand, BotCommandScopeChat
 from aiogram.dispatcher.router import Router
 from magic_filter import F
 
-from bot.config_reader import load_config
+from bot.config_reader import config
 from bot.before_start import fetch_admins, check_rights_and_permissions
 from bot.handlers.not_replies import register_no_replies_handler
 from bot.handlers.from_users import register_from_users_handlers
@@ -27,18 +27,15 @@ async def set_bot_commands(bot: Bot, main_group_id: int):
 
 async def main():
     logging.basicConfig(
-        level=logging.ERROR,
+        level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
-
-    # Reading config from env vars
-    config = load_config()
 
     # Define the only router
     main_group_router = Router()
 
     # Define bot, dispatcher and include routers to dispatcher
-    bot = Bot(token=config.token, parse_mode="HTML")
+    bot = Bot(token=config.bot_token, parse_mode="HTML")
     dp = Dispatcher()
     dp.include_router(main_group_router)
 
@@ -55,7 +52,7 @@ async def main():
 
     # Collect admins so that we don't have to fetch them every time
     try:
-        result = await fetch_admins(config, bot)
+        result = await fetch_admins(bot)
     except TelegramAPIError as error:
         error_msg = f"Error fetching main group admins: {error}"
         try:
@@ -75,9 +72,9 @@ async def main():
     main_group_router.message.filter(F.chat.id == config.group.main)
 
     # Register handlers
-    register_no_replies_handler(main_group_router, config)
+    register_no_replies_handler(main_group_router)
     register_from_users_handlers(main_group_router)
-    register_from_admins_handlers(main_group_router, config)
+    register_from_admins_handlers(main_group_router)
     register_group_join_handler(main_group_router, config.remove_joins)
     register_admin_changes_handlers(main_group_router)
     register_callbacks(main_group_router)

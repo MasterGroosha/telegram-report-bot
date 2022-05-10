@@ -8,20 +8,19 @@ from aiogram.dispatcher.filters.command import Command
 from aiogram.exceptions import TelegramAPIError
 from magic_filter import F
 
-from bot.config_reader import Config
+from bot.config_reader import config
 from bot.localization import Lang
 from bot.callback_factories import DeleteMsgCallback
 
 logger = logging.getLogger("report_bot")
 
 
-def get_report_chats(config: Config, bot_id: int) -> List[int]:
+def get_report_chats(bot_id: int) -> List[int]:
     """
     Get list of recipients to send report message to.
     If report mode is "group", then only report group is used
     Otherwise, all admins who can delete messages and ban users (except this bot)
 
-    :param config: config instance
     :param bot_id: this bot's ID
     :return: list of chat IDs to send messages to
     """
@@ -82,7 +81,7 @@ def make_report_keyboard(user_id: int, message_ids: str, lang: Lang):
     return types.InlineKeyboardMarkup(inline_keyboard=markup)
 
 
-async def cmd_report(message: types.Message, config: Config, lang: Lang, bot: Bot):
+async def cmd_report(message: types.Message, lang: Lang, bot: Bot):
     """
     Handle /report command in main group
 
@@ -96,7 +95,7 @@ async def cmd_report(message: types.Message, config: Config, lang: Lang, bot: Bo
         return
     msg = await message.reply(lang.get("report_sent"))
 
-    for chat in get_report_chats(config, bot.id):
+    for chat in get_report_chats(bot.id):
         try:
             await bot.forward_message(
                 chat_id=chat, from_chat_id=message.chat.id,
@@ -114,7 +113,7 @@ async def cmd_report(message: types.Message, config: Config, lang: Lang, bot: Bo
             logger.error(f"[{type(ex).__name__}]: {str(ex)}")
 
 
-async def calling_all_units(message: types.Message, config: Config, lang: Lang, bot: Bot):
+async def calling_all_units(message: types.Message, lang: Lang, bot: Bot):
     """
     Handle messages starting with "@admin". No additional checks are done, so
     "@admin", "@admin!!!", "@administrator" and other are valid
@@ -124,7 +123,7 @@ async def calling_all_units(message: types.Message, config: Config, lang: Lang, 
     :param lang: locale instance
     :param bot: bot instance
     """
-    for chat in get_report_chats(config, bot.id):
+    for chat in get_report_chats(bot.id):
         await bot.send_message(
             chat, lang.get("need_admins_attention").format(msg_url=message.get_url(force_private=True))
         )

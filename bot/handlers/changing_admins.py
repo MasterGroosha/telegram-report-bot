@@ -2,10 +2,10 @@ from aiogram import types
 from aiogram.dispatcher.router import Router
 
 from bot.filters.changing_admins import AdminAdded, AdminRemoved
-from bot.config_reader import Config
+from bot.config_reader import config
 
 
-async def admin_added(event: types.ChatMemberUpdated, config: Config):
+async def admin_added(event: types.ChatMemberUpdated):
     """
     Handle "new admin was added" event and update config.admins dictionary
 
@@ -19,12 +19,11 @@ async def admin_added(event: types.ChatMemberUpdated, config: Config):
         config.admins[new.user.id] = {"can_restrict_members": new.can_restrict_members}
 
 
-async def admin_removed(event: types.ChatMemberUpdated, config: Config):
+async def admin_removed(event: types.ChatMemberUpdated):
     """
     Handle "user was demoted from admins" event and update config.admins dictionary
 
     :param event: ChatMemberUpdated event
-    :param config: config instance
     """
     new = event.new_chat_member
     if new.user.id in config.admins.keys():
