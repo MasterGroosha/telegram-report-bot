@@ -4,7 +4,7 @@
 BOT_TOKEN=12345:AaBbCcDdEeFfGgHhIiJjKk
 
 # Bot's messages language. Currently available: en, ru
-BOT_LANGUAGE=en
+LANG=en
 
 # Where to send reports. Available options: group, private
 REPORT_MODE=group
