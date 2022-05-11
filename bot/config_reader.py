@@ -1,10 +1,10 @@
 from typing import Optional
 
-from pydantic import BaseSettings, validator
+from pydantic import BaseSettings, SecretStr, validator
 
 
 class Settings(BaseSettings):
-    bot_token: str
+    bot_token: SecretStr
     lang: str
     report_mode: str
     group_main: int

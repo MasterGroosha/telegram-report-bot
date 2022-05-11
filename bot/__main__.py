@@ -25,7 +25,7 @@ async def main():
     )
 
     # Define bot, dispatcher and include routers to dispatcher
-    bot = Bot(token=config.bot_token, parse_mode="HTML")
+    bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="HTML")
     dp = Dispatcher()
 
     # Check that bot is admin in "main" group and has necessary permissions
