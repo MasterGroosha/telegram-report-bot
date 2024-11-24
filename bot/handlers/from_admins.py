@@ -2,7 +2,7 @@ import re
 from datetime import timedelta
 
 from aiogram import types, Bot, Router, F
-from aiogram.dispatcher.filters.command import Command
+from aiogram.filters import Command
 
 from bot.config_reader import config
 from bot.localization import Lang
