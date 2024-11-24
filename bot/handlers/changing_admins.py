@@ -15,7 +15,7 @@ async def admin_added(
         admins: dict
 ):
     """
-    Handle "new admin was added" event and update config.admins dictionary
+    Handle "new admin was added" event and update admins dictionary
 
     :param event: ChatMemberUpdated event
     :param admins: dictionary of admins before handling this event
@@ -36,7 +36,7 @@ async def admin_removed(
         admins: dict,
 ):
     """
-    Handle "user was demoted from admins" event and update config.admins dictionary
+    Handle "user was demoted from admins" event and update admins dictionary
 
     :param event: ChatMemberUpdated event
     :param admins: dictionary of admins before handling this event

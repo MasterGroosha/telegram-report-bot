@@ -1,16 +1,15 @@
 import asyncio
-import logging
-import structlog
 
+import structlog
 from aiogram import Bot, Dispatcher
 from aiogram.exceptions import TelegramAPIError
 # from aiogram.types import BotCommand, BotCommandScopeChat
 from structlog.typing import FilteringBoundLogger
 
+from bot.before_start import check_bot_rights_main_group, check_bot_rights_reports_group, fetch_admins
 from bot.config_reader import get_config, LogConfig, BotConfig
 from bot.handlers import get_routers
 from bot.logs import get_structlog_config
-from bot.before_start import check_bot_rights_main_group, check_bot_rights_reports_group, fetch_admins
 
 
 # async def set_bot_commands(bot: Bot, main_group_id: int):
