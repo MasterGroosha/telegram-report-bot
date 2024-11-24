@@ -1,4 +1,5 @@
 from aiogram import F, Router
+from . import changing_admins
 
 def get_routers(
         main_group_id: int,
@@ -6,6 +7,10 @@ def get_routers(
 ) -> list[Router]:
     main_group_router = Router()
     main_group_router.message.filter(F.chat.id == main_group_id)
+    main_group_router.chat_member.filter(F.chat.id == main_group_id)
+    main_group_router.include_routers(
+        changing_admins.router,
+    )
 
     reports_group_router = Router()
     reports_group_router.message.filter(F.chat.id == reports_group_id)
