@@ -2,40 +2,20 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
-from aiogram.types import BotCommand
+from aiogram.exceptions import TelegramAPIError
+from aiogram.types import BotCommand, BotCommandScopeChat
 
-from bot.config_reader import load_config
-from bot.handlers.main_group_admin import register_main_group_admin
-from bot.handlers.main_group_user import register_main_group_user
-from bot.handlers.main_group_events import register_group_events
-from bot.handlers.callbacks_reports import register_callbacks_reports
-
-logger = logging.getLogger(__name__)
+from bot.before_start import fetch_admins, check_rights_and_permissions
+from bot.config_reader import config
+from bot.handlers import setup_routers
+from bot.localization import Lang
 
 
-async def set_bot_commands(bot: Bot):
+async def set_bot_commands(bot: Bot, main_group_id: int):
     commands = [
         BotCommand(command="report", description="Report message to group admins"),
     ]
-    await bot.set_my_commands(commands)
-
-
-def get_handled_updates_list(dp: Dispatcher) -> list:
-    """
-    Here we collect only the needed updates for bot based on already registered handlers types.
-    This way Telegram doesn't send unwanted updates and bot doesn't have to proceed them.
-
-    :param dp: Dispatcher
-    :return: a list of registered handlers types
-    """
-    available_updates = (
-        "callback_query_handlers", "channel_post_handlers", "chat_member_handlers",
-        "chosen_inline_result_handlers", "edited_channel_post_handlers", "edited_message_handlers",
-        "inline_query_handlers", "message_handlers", "my_chat_member_handlers", "poll_answer_handlers",
-        "poll_handlers", "pre_checkout_query_handlers", "shipping_query_handlers"
-    )
-    return [item.replace("_handlers", "") for item in available_updates
-            if len(dp.__getattribute__(item).handlers) > 0]
+    await bot.set_my_commands(commands, scope=BotCommandScopeChat(chat_id=main_group_id))
 
 
 async def main():
@@ -44,36 +24,55 @@ async def main():
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
 
-    # Reading config from env vars
-    config = load_config()
+    # Define bot, dispatcher and include routers to dispatcher
+    bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="HTML")
+    dp = Dispatcher()
 
-    bot = Bot(token=config.token, parse_mode="HTML")
-    bot["config"] = config
-    dp = Dispatcher(bot)
+    # Check that bot is admin in "main" group and has necessary permissions
+    try:
+        await check_rights_and_permissions(bot, config.group_main)
+    except (TelegramAPIError, PermissionError) as error:
+        error_msg = f"Error with main group: {error}"
+        try:
+            await bot.send_message(config.group_reports, error_msg)
+        finally:
+            print(error_msg)
+            return
+
+    # Collect admins so that we don't have to fetch them every time
+    try:
+        result = await fetch_admins(bot)
+    except TelegramAPIError as error:
+        error_msg = f"Error fetching main group admins: {error}"
+        try:
+            await bot.send_message(config.group_reports, error_msg)
+        finally:
+            print(error_msg)
+            return
+    config.admins = result
+
+    try:
+        lang = Lang(config.lang)
+    except ValueError:
+        print(f"Error no localization found for language code: {config.lang}")
+        return
 
     # Register handlers
-    register_main_group_admin(dp, main_group_id=config.group.main)
-    register_main_group_user(dp, main_group_id=config.group.main)
-    register_group_events(dp, main_group_id=config.group.main)
-    register_callbacks_reports(dp)
+    router = setup_routers()
+    dp.include_router(router)
 
     # Register /-commands in UI
-    await set_bot_commands(bot)
+    await set_bot_commands(bot, config.group_main)
 
-    logger.info("Starting bot")
+    logging.info("Starting bot")
 
     # Start polling
-    # await dp.skip_updates()  # skip pending updates (optional)
-    try:
-        await dp.start_polling(allowed_updates=get_handled_updates_list(dp))
-    finally:
-        await dp.storage.close()
-        await dp.storage.wait_closed()
-        await bot.session.close()
+    # await bot.get_updates(offset=-1)  # skip pending updates (optional)
+    await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), lang=lang)
 
 
 if __name__ == '__main__':
     try:
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
-        logger.error("Bot stopped!")
+        logging.error("Bot stopped!")
