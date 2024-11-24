@@ -1,9 +1,5 @@
 # Report bot for Telegram
 
-⚠️ The `master` branch is currently on hold, check [aiogram3](https://github.com/MasterGroosha/telegram-report-bot/tree/aiogram3) 
-branch for an actual version using **aiogram v3.x** (alpha). You can find the newest Docker images using the badge
-below.
-
 <a href="https://hub.docker.com/r/groosha/telegram-report-bot"><img src="https://img.shields.io/badge/Docker%20Hub-telegram--report--bot-blue"></a> 
 
 This repository contains source code of a small yet rather powerful bot for Telegram, which handles reports from users and passes them to admins. 
