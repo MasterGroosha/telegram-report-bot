@@ -6,6 +6,10 @@ This repository contains source code of a small yet rather powerful bot for Tele
 Uses [aiogram](https://github.com/aiogram/aiogram) framework.  
 The main goal is to build a bot with no external database needed. Thus, it may lack some features, but hey, it's open source!
 
+⚠️ Warning: this bot can be used **ONLY** to notify people (most often, group admins), that someone might 
+violate group's own rules. If you want to report some content to Telegram official support team, please use "Report" 
+button in your app.
+
 #### Screenshot
 
 ![Left - main group. Right - group for admins only. If you don't see this image, please check GitHub repo](screenshots/cover.png)
@@ -23,9 +27,8 @@ users can write on behalf of their channels);
 * English and Russian languages are built-in.
 
 #### Requirements
-* Python 3.9 and above;  
-* Tested on Linux, should work on Windows, no platform-specific code is used;  
-* Systemd (you can use it to enable autostart and autorestart) or Docker.
+* Python 3.11+ (developed under 3.12);  
+* Systemd (you can use it to enable autostart and autorestart), Docker or any other ser.
 
 #### Installation  
 1. Go to [@BotFather](https://t.me/telegram), create a new bot, write down its token, add it to your existing group 
