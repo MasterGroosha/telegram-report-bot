@@ -18,6 +18,9 @@ class BotConfig(BaseModel):
     token: SecretStr
     main_group_id: int
     reports_group_id: int
+    utc_offset: int
+    date_format: str
+    time_format: str
 
 
 class LogConfig(BaseModel):

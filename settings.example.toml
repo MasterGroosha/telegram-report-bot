@@ -1,14 +1,17 @@
 [bot]
 # Get bot's token from https://t.me/botfather
 token            = "1234567890:AaBbCcDdEeFfGrOoShALlMmNnOoPpQqRrSs"
-main_group_id    = -1001234567890
+main_group_id    = -100123456789
 reports_group_id = -100987654321
+utc_offset       = 0
+date_format      = "%d.%m.%Y"
+time_format      = "%H:%M"
 
 [logs]
-show_datetime = true
-datetime_format = "%Y-%m-%d %H:%M:%S"
-show_debug_logs = true
-time_in_utc = false
-use_colors_in_console = false
-renderer = "json"
+show_datetime          = true
+datetime_format        = "%Y-%m-%d %H:%M:%S"
+show_debug_logs        = true
+time_in_utc            = false
+use_colors_in_console  = false
+renderer               = "json"
 allow_third_party_logs = true

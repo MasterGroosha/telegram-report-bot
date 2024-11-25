@@ -55,6 +55,7 @@ async def main():
 
     dp = Dispatcher(
         admins=main_group_admins,
+        bot_config=bot_config,
         main_group_id=bot_config.main_group_id,
         reports_group_id=bot_config.reports_group_id,
         l10n=l10n,
