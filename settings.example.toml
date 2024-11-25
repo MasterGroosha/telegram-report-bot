@@ -1,11 +1,13 @@
 [bot]
 # Get bot's token from https://t.me/botfather
-token            = "1234567890:AaBbCcDdEeFfGrOoShALlMmNnOoPpQqRrSs"
-main_group_id    = -100123456789
-reports_group_id = -100987654321
-utc_offset       = 0
-date_format      = "%d.%m.%Y"
-time_format      = "%H:%M"
+token             = "1234567890:AaBbCcDdEeFfGrOoShALlMmNnOoPpQqRrSs"
+main_group_id     = -100123456789
+reports_group_id  = -100987654321
+utc_offset        = 0
+date_format       = "%d.%m.%Y"
+time_format       = "%H:%M"
+remove_joins      = true
+auto_ban_channels = true
 
 [logs]
 show_datetime          = true

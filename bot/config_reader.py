@@ -21,6 +21,8 @@ class BotConfig(BaseModel):
     utc_offset: int
     date_format: str
     time_format: str
+    remove_joins: bool
+    auto_ban_channels: bool
 
 
 class LogConfig(BaseModel):

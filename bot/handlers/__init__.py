@@ -1,5 +1,5 @@
 from aiogram import F, Router
-from . import changing_admins, reporting_to_admins, reacting_to_reports, restricting_users
+from . import changing_admins, reporting_to_admins, reacting_to_reports, restricting_users, additional_features
 
 def get_routers(
         main_group_id: int,
@@ -12,6 +12,7 @@ def get_routers(
         changing_admins.router,
         restricting_users.router,
         reporting_to_admins.router,
+        additional_features.router,
     )
 
     reports_group_router = Router()
