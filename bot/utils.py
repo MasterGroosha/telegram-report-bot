@@ -11,9 +11,12 @@ class FormattedDateTimeOffset(NamedTuple):
 
 def get_formatted_datetime(
         bot_config: BotConfig,
+        existing_datetime: datetime | None = None,
 ) -> FormattedDateTimeOffset:
     offset = bot_config.utc_offset
-    now_in_tz = datetime.now(tz=timezone.utc) + timedelta(hours=offset)
+    if not existing_datetime:
+        existing_datetime = datetime.now(tz=timezone.utc)
+    now_in_tz = existing_datetime + timedelta(hours=offset)
     if offset == 0:
         offset_str = "UTC"
     elif offset > 0:

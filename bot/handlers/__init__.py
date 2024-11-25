@@ -1,5 +1,5 @@
 from aiogram import F, Router
-from . import changing_admins, reporting_to_admins, reacting_to_reports
+from . import changing_admins, reporting_to_admins, reacting_to_reports, restricting_users
 
 def get_routers(
         main_group_id: int,
@@ -10,6 +10,7 @@ def get_routers(
     main_group_router.chat_member.filter(F.chat.id == main_group_id)
     main_group_router.include_routers(
         changing_admins.router,
+        restricting_users.router,
         reporting_to_admins.router,
     )
 
