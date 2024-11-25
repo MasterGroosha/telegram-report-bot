@@ -2,6 +2,8 @@ import asyncio
 
 import structlog
 from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from aiogram.exceptions import TelegramAPIError
 # from aiogram.types import BotCommand, BotCommandScopeChat
 from structlog.typing import FilteringBoundLogger
@@ -24,7 +26,10 @@ async def main():
     structlog.configure(**get_structlog_config(log_config))
 
     bot_config: BotConfig = get_config(model=BotConfig, root_key="bot")
-    bot = Bot(bot_config.token.get_secret_value())
+    bot = Bot(
+        token=bot_config.token.get_secret_value(),
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+    )
 
     logger: FilteringBoundLogger = structlog.get_logger()
 
