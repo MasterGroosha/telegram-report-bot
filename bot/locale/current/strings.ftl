@@ -1,64 +1,64 @@
 error-must-be-reply =
-    Эта команда должна быть ответом на другое сообщение!
+    This command must be a reply to another message!
 
 error-cannot-report-admins =
-    Админов репортишь? Ай-ай-ай 😈
+    Whoa! Don't report admins 😈
 
 error-cannot-report-linked =
-    Нельзя жаловаться на сообщения из привязанного канала
+    You cannot report messages from linked channel
 
 report-sent =
-    <i>Жалоба отправлена администраторам</i>
+    <i>Report sent</i>
 
 need-admins-attention =
-    Уважаемые админы, в чате нужно ваше присутствие!
+    Dear admins, your presence in chat is needed!
 
-    ➡️ <a href="{$msg_url}">Перейти к чату</a>
+    ➡️ <a href="{$msg_url}">Go to chat</a>
 
 report-info =
-    👆 Отправлено {$msg_date} в {$msg_time} ({$msg_utc})
+    👆 Sent {$msg_date} at {$msg_time} ({$msg_utc})
 
-    ➡️ <a href="{$msg_url}">Перейти к cообщению</a>
+    ➡️ <a href="{$msg_url}">Go to message</a>
 
 report-info-with-comment =
-    👆 Отправлено {$msg_date} в {$msg_time} ({$msg_utc})
+    👆 Sent {$msg_date} at {$msg_time} ({$msg_utc})
 
-    ➡️ <a href="{$msg_url}">Перейти к cообщению</a>
-    Комментарий: {$msg_comment}
+    ➡️ <a href="{$msg_url}">Go to message</a>
+    Note: {$msg_comment}
 
 
 report-button-delete =
-    Удалить сообщение
+    Delete message
 
 report-button-delete-and-ban =
-    Удалить и забанить
+    Delete and ban
 
 message-deleted-successfully =
-    Сообщение удалено.
+    Message deleted.
 
 failed-to-delete-message =
-    Не удалось удалить сообщение.
+    Failed to delete message.
 
 user-or-channel-banned-successfully =
-    Юзер или канал успешно забанен.
+    User or channel was banned successfully.
 
 failed-to-ban-user-or-channel =
-    Не удалось забанить юзера или канал.
+    Failed to ban user or channel.
 
 error-restricting-admin =
-    Невозможно ограничить администратора
+    Cannot restrict admin
 
 error-no-restrict-permissions =
-    У вас нет права ограничивать пользователей
+    You are not allowed to restrict users
 
 channel-banned =
-    Канал забанен
+    Channel was banned
 
 readonly-forever =
-    🙊 <i>Пользователь переведён в режим «только чтение» навсегда</i>
+    🙊 <i>User set to read-only mode forever</i>
 
 readonly-temporary =
-    🙊 <i>Пользователь переведён в режим «только чтение» до {$msg_date} {$msg_time} ({$msg_utc})</i>
+    🙊 <i>User set to read-only mode until {$msg_date} {$msg_time} ({$msg_utc})</i>
 
 channels-not-allowed =
-    В этой группе запрещено отправлять сообщения от имени канала. Сам канал забанен.
+    Sending messages on behalf of channels is not allowed in this group. Channel banned.
