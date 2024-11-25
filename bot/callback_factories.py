@@ -1,10 +1,13 @@
-from aiogram.dispatcher.filters.callback_data import CallbackData
+from enum import Enum
+
+from aiogram.filters.callback_data import CallbackData
 
 
-class DeleteMsgCallback(CallbackData, prefix="delmsg"):
-    # action to perform: "del" to simply delete a message or "ban" to ban chat/user as well
-    action: str
-    # the ID of chat or user to perform action on
-    entity_id: int
-    # string-formatted list of message IDs to delete
-    message_ids: str  # Lists are not supported =(
+class AdminAction(str, Enum):
+    DELETE = "del"
+    BAN = "ban"
+
+class AdminActionCallbackV1(CallbackData, prefix="v1"):
+    action: AdminAction
+    user_or_chat_id: int
+    reported_message_id: int
