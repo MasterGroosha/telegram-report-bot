@@ -42,12 +42,10 @@ class LogConfig(BaseModel):
 
 @lru_cache
 def parse_config_file() -> dict:
-    # Проверяем наличие переменной окружения, которая переопределяет путь к конфигу
     file_path = getenv("CONFIG_FILE_PATH")
     if file_path is None:
         error = "Could not find settings file"
         raise ValueError(error)
-    # Читаем сам файл, пытаемся его распарсить как TOML
     with open(file_path, "rb") as file:
         config_data = load(file)
     return config_data

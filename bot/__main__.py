@@ -14,13 +14,6 @@ from bot.handlers import get_routers
 from bot.logs import get_structlog_config
 
 
-# async def set_bot_commands(bot: Bot, main_group_id: int):
-#     commands = [
-#         BotCommand(command="report", description="Report message to group admins"),
-#     ]
-#     await bot.set_my_commands(commands, scope=BotCommandScopeChat(chat_id=main_group_id))
-
-
 async def main():
     log_config: LogConfig = get_config(model=LogConfig, root_key="logs")
     structlog.configure(**get_structlog_config(log_config))
@@ -67,53 +60,5 @@ async def main():
 
     await logger.ainfo("Program started...")
     await dp.start_polling(bot)
-
-
-    # # Define bot, dispatcher and include routers to dispatcher
-    # bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="HTML")
-    # dp = Dispatcher()
-    #
-    # # Check that bot is admin in "main" group and has necessary permissions
-    # try:
-    #     await check_rights_and_permissions(bot, config.group_main)
-    # except (TelegramAPIError, PermissionError) as error:
-    #     error_msg = f"Error with main group: {error}"
-    #     try:
-    #         await bot.send_message(config.group_reports, error_msg)
-    #     finally:
-    #         print(error_msg)
-    #         return
-    #
-    # # Collect admins so that we don't have to fetch them every time
-    # try:
-    #     result = await fetch_admins(bot)
-    # except TelegramAPIError as error:
-    #     error_msg = f"Error fetching main group admins: {error}"
-    #     try:
-    #         await bot.send_message(config.group_reports, error_msg)
-    #     finally:
-    #         print(error_msg)
-    #         return
-    # config.admins = result
-    #
-    # try:
-    #     lang = Lang(config.lang)
-    # except ValueError:
-    #     print(f"Error no localization found for language code: {config.lang}")
-    #     return
-    #
-    # # Register handlers
-    # router = setup_routers()
-    # dp.include_router(router)
-    #
-    # # Register /-commands in UI
-    # await set_bot_commands(bot, config.group_main)
-    #
-    # logging.info("Starting bot")
-    #
-    # # Start polling
-    # # await bot.get_updates(offset=-1)  # skip pending updates (optional)
-    # await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), lang=lang)
-
 
 asyncio.run(main())
