@@ -45,7 +45,11 @@ async def main():
 
     main_group_admins: dict = await fetch_admins(bot, bot_config.main_group_id)
 
-    dp = Dispatcher(admins=main_group_admins)
+    dp = Dispatcher(
+        admins=main_group_admins,
+        main_group_id=bot_config.main_group_id,
+        reports_group_id=bot_config.reports_group_id,
+    )
     dp.include_routers(*get_routers(
         main_group_id=bot_config.main_group_id,
         reports_group_id=bot_config.reports_group_id,
