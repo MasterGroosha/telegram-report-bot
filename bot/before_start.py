@@ -1,6 +1,7 @@
 from aiogram import Bot
 from aiogram.types import (
-    ChatMemberAdministrator, ChatMemberOwner, ChatMemberBanned, ChatMemberLeft, ChatMemberRestricted
+    ChatMemberAdministrator, ChatMemberOwner, ChatMemberBanned, ChatMemberLeft, ChatMemberRestricted,
+    BotCommand, BotCommandScopeChat
 )
 
 
@@ -43,3 +44,10 @@ async def fetch_admins(
         else:
             result[admin.user.id] = {"can_restrict_members": admin.can_restrict_members}
     return result
+
+
+async def set_bot_commands(bot: Bot, main_group_id: int):
+    commands = [
+        BotCommand(command="report", description="Report message to group admins"),
+    ]
+    await bot.set_my_commands(commands, scope=BotCommandScopeChat(chat_id=main_group_id))

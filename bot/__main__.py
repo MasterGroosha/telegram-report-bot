@@ -5,10 +5,9 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.exceptions import TelegramAPIError
-# from aiogram.types import BotCommand, BotCommandScopeChat
 from structlog.typing import FilteringBoundLogger
 
-from bot.before_start import check_bot_rights_main_group, check_bot_rights_reports_group, fetch_admins
+from bot.before_start import check_bot_rights_main_group, check_bot_rights_reports_group, fetch_admins, set_bot_commands
 from bot.config_reader import get_config, LogConfig, BotConfig
 from bot.fluent_loader import get_fluent_localization
 from bot.handlers import get_routers
@@ -48,6 +47,8 @@ async def main():
         await logger.aerror(f"Cannot use bot in reports group, because {ex.__class__.__name__}: {str(ex)}")
         await bot.session.close()
         return
+
+    await set_bot_commands(bot, bot_config.main_group_id)
 
     main_group_admins: dict = await fetch_admins(bot, bot_config.main_group_id)
 
