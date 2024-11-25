@@ -1,5 +1,5 @@
 from aiogram import F, Router
-from . import changing_admins, reporting_to_admins
+from . import changing_admins, reporting_to_admins, reacting_to_reports
 
 def get_routers(
         main_group_id: int,
@@ -15,7 +15,10 @@ def get_routers(
 
     reports_group_router = Router()
     reports_group_router.message.filter(F.chat.id == reports_group_id)
-    reports_group_router.callback_query.filter(F.chat.id == reports_group_id)
+    reports_group_router.callback_query.filter(F.message.chat.id == reports_group_id)
+    reports_group_router.include_routers(
+        reacting_to_reports.router,
+    )
 
     return [
         main_group_router,
