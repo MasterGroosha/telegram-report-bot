@@ -10,6 +10,7 @@ from structlog.typing import FilteringBoundLogger
 
 from bot.before_start import check_bot_rights_main_group, check_bot_rights_reports_group, fetch_admins
 from bot.config_reader import get_config, LogConfig, BotConfig
+from bot.fluent_loader import get_fluent_localization
 from bot.handlers import get_routers
 from bot.logs import get_structlog_config
 
@@ -50,10 +51,13 @@ async def main():
 
     main_group_admins: dict = await fetch_admins(bot, bot_config.main_group_id)
 
+    l10n = get_fluent_localization()
+
     dp = Dispatcher(
         admins=main_group_admins,
         main_group_id=bot_config.main_group_id,
         reports_group_id=bot_config.reports_group_id,
+        l10n=l10n,
     )
     dp.include_routers(*get_routers(
         main_group_id=bot_config.main_group_id,
