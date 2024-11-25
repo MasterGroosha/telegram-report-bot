@@ -17,10 +17,12 @@ need-admins-attention =
 
 report-info =
     👆 Отправлено {$msg_date} в {$msg_time} ({$msg_utc})
+
     ➡️ <a href="{$msg_url}">Перейти к cообщению</a>
 
 report-info-with-comment =
     👆 Отправлено {$msg_date} в {$msg_time} ({$msg_utc})
+
     ➡️ <a href="{$msg_url}">Перейти к cообщению</a>
 
     Комментарий: {$msg_comment}
@@ -30,3 +32,16 @@ report-button-delete =
 
 report-button-delete-and-ban =
     Удалить и забанить
+
+message-deleted-successfully =
+    Сообщение удалено.
+
+failed-to-delete-message =
+    Не удалось удалить сообщение.
+
+user-or-channel-banned-successfully =
+    Юзер или канал успешно забанен.
+
+failed-to-ban-user-or-channel =
+    Не удалось забанить юзера или канал.
+

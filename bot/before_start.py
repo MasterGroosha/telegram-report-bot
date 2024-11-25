@@ -12,9 +12,9 @@ async def check_bot_rights_main_group(
         chat_id=main_group_id, user_id=bot.id
     )
     if not isinstance(chat_member_info, ChatMemberAdministrator):
-        raise PermissionError("bot is not an administrator")
+        raise PermissionError("bot must be an administrator to work properly")
     if not chat_member_info.can_restrict_members or not chat_member_info.can_delete_messages:
-        raise PermissionError("bot needs 'restrict participants' and 'delete messages' permissions to work properly")
+        raise PermissionError("bot needs 'ban users' and 'delete messages' permissions to work properly")
 
 async def check_bot_rights_reports_group(
         bot: Bot,

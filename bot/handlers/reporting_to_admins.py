@@ -77,12 +77,12 @@ async def cmd_report(
 async def calling_all_units(
         message: Message,
         bot: Bot,
-        reports_group_id: int,
+        bot_config: BotConfig,
         l10n: FluentLocalization,
 ):
     msg_url = message.get_url(force_private=True, include_thread_id=True)
     message_text = l10n.format_value("need-admins-attention", {"msg_url": msg_url})
     await bot.send_message(
-        chat_id=reports_group_id,
+        chat_id=bot_config.reports_group_id,
         text=message_text,
     )
