@@ -1,40 +1,60 @@
-from typing import Optional
+from enum import StrEnum, auto
+from functools import lru_cache
+from os import getenv
+from tomllib import load
+from typing import Type, TypeVar
 
-from pydantic import BaseSettings, SecretStr, validator
+from pydantic import BaseModel, SecretStr, field_validator
+
+ConfigType = TypeVar("ConfigType", bound=BaseModel)
 
 
-class Settings(BaseSettings):
-    bot_token: SecretStr
-    lang: str
-    report_mode: str
-    group_main: int
-    group_reports: Optional[int]
-    admins: dict = {}
+class LogRenderer(StrEnum):
+    JSON = auto()
+    CONSOLE = auto()
+
+
+class BotConfig(BaseModel):
+    token: SecretStr
+    main_group_id: int
+    reports_group_id: int
+    utc_offset: int
+    date_format: str
+    time_format: str
     remove_joins: bool
-    ban_channels: bool
-
-    @validator("lang")
-    def validate_lang(cls, v):
-        if v not in ("en", "ru"):
-            raise ValueError("Incorrect value. Must be one of: en, ru")
-        return v
-
-    @validator("report_mode")
-    def validate_report_mode(cls, v):
-        if v not in ("group", "private"):
-            raise ValueError("Incorrect value. Must be one of: group, private")
-        return v
-
-    @validator("group_reports")
-    def validate_group_reports(cls, v, values):
-        if values.get("report_mode") == "group" and v is None:
-            raise ValueError("Reports group ID not set")
-        return v
-
-    class Config:
-        env_file = '.env'
-        env_file_encoding = 'utf-8'
-        env_nested_delimiter = '__'
+    auto_ban_channels: bool
 
 
-config = Settings()
+class LogConfig(BaseModel):
+    show_datetime: bool
+    datetime_format: str
+    show_debug_logs: bool
+    time_in_utc: bool
+    use_colors_in_console: bool
+    renderer: LogRenderer
+    allow_third_party_logs: bool
+
+    @field_validator('renderer', mode="before")
+    @classmethod
+    def log_renderer_to_lower(cls, v: str):
+        return v.lower()
+
+
+@lru_cache
+def parse_config_file() -> dict:
+    file_path = getenv("CONFIG_FILE_PATH")
+    if file_path is None:
+        error = "Could not find settings file"
+        raise ValueError(error)
+    with open(file_path, "rb") as file:
+        config_data = load(file)
+    return config_data
+
+
+@lru_cache
+def get_config(model: Type[ConfigType], root_key: str) -> ConfigType:
+    config_dict = parse_config_file()
+    if root_key not in config_dict:
+        error = f"Key {root_key} not found"
+        raise ValueError(error)
+    return model.model_validate(config_dict[root_key])
