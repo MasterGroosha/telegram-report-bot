@@ -1,10 +1,14 @@
 version: "3.8"
 services:
     bot:
-        image: groosha/telegram-report-bot:latest
-        restart: always
+        image: telegram-report-bot:latest
+        restart: "always"
         stop_signal: SIGINT
-        env_file:
-            - .env
+        environment:
+            - CONFIG_FILE_PATH=/app/settings.toml
         volumes:
-            - /etc/localtime:/etc/localtime:ro
+            - "/etc/localtime:/etc/localtime:ro"
+            # Pass your settings toml to container
+            - "/path/to/your/settings.toml:/app/settings.toml:ro"
+            # In case you want to use another locale
+            - "/path/to/custom/locale/strings.ftl:/app/current/strings.ftl:ro"
