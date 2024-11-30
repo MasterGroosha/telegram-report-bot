@@ -1,7 +1,7 @@
-version: "3.8"
+name: "telegram-report-bot"
 services:
     bot:
-        image: telegram-report-bot:latest
+        image: "groosha/telegram-report-bot:latest"
         restart: "always"
         stop_signal: SIGINT
         environment:
@@ -11,4 +11,4 @@ services:
             # Pass your settings toml to container
             - "/path/to/your/settings.toml:/app/settings.toml:ro"
             # In case you want to use another locale
-            - "/path/to/custom/locale/strings.ftl:/app/current/strings.ftl:ro"
+            - "/path/to/custom/locale/strings.ftl:/app/bot/locale/current/strings.ftl:ro"
