@@ -62,3 +62,6 @@ readonly-temporary =
 
 channels-not-allowed =
     Sending messages on behalf of channels is not allowed in this group. Channel banned.
+
+bot-command-description =
+    Report message to group admins

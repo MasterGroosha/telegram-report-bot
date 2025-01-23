@@ -41,11 +41,11 @@ async def main():
         await bot.session.close()
         return
 
-    await set_bot_commands(bot, bot_config.main_group_id)
+    l10n = get_fluent_localization()
+
+    await set_bot_commands(bot, bot_config.main_group_id, l10n)
 
     main_group_admins: dict = await fetch_admins(bot, bot_config.main_group_id)
-
-    l10n = get_fluent_localization()
 
     dp = Dispatcher(
         admins=main_group_admins,
