@@ -28,7 +28,7 @@ async def main():
 
     # Check that bot can run properly
     try:
-        await check_bot_rights_main_group(bot, bot_config.main_group_id)
+        await check_bot_rights_main_group(bot, bot_config)
     except (TelegramAPIError, PermissionError) as ex:
         await logger.aerror(f"Cannot use bot in main group, because {ex.__class__.__name__}: {str(ex)}")
         await bot.session.close()

@@ -10,6 +10,7 @@ logger: FilteringBoundLogger = structlog.get_logger()
 
 
 def get_report_keyboard(
+        chat_id: int,
         user_or_chat_id: int,
         reported_message_id: int,
         l10n: FluentLocalization,
@@ -18,6 +19,7 @@ def get_report_keyboard(
 
     delete_callback = AdminActionCallbackV1(
         action=AdminAction.DELETE,
+        chat_id=chat_id,
         user_or_chat_id=user_or_chat_id,
         reported_message_id=reported_message_id,
     )
@@ -29,6 +31,7 @@ def get_report_keyboard(
 
     ban_callback = AdminActionCallbackV1(
         action=AdminAction.BAN,
+        chat_id=chat_id,
         user_or_chat_id=user_or_chat_id,
         reported_message_id=reported_message_id,
     )

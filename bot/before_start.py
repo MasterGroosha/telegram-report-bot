@@ -1,21 +1,24 @@
 from aiogram import Bot
 from aiogram.types import (
     ChatMemberAdministrator, ChatMemberOwner, ChatMemberBanned, ChatMemberLeft, ChatMemberRestricted,
-    BotCommand, BotCommandScopeChat
+    BotCommand, BotCommandScopeAllGroupChats
 )
+
+from bot.config_reader import BotConfig
 
 
 async def check_bot_rights_main_group(
         bot: Bot,
-        main_group_id: int,
+        bot_config: BotConfig,
 ):
-    chat_member_info = await bot.get_chat_member(
-        chat_id=main_group_id, user_id=bot.id
-    )
-    if not isinstance(chat_member_info, ChatMemberAdministrator):
-        raise PermissionError("bot must be an administrator to work properly")
-    if not chat_member_info.can_restrict_members or not chat_member_info.can_delete_messages:
-        raise PermissionError("bot needs 'ban users' and 'delete messages' permissions to work properly")
+    for chat_id in bot_config.main_group_id:
+        chat_member_info = await bot.get_chat_member(
+            chat_id=chat_id, user_id=bot.id
+        )
+        if not isinstance(chat_member_info, ChatMemberAdministrator):
+            raise PermissionError(f"Chat {chat_id}: bot must be an administrator to work properly")
+        if not chat_member_info.can_restrict_members or not chat_member_info.can_delete_messages:
+            raise PermissionError(f"Chat {chat_id}: bot needs 'ban users' and 'delete messages' permissions to work properly")
 
 async def check_bot_rights_reports_group(
         bot: Bot,
@@ -32,22 +35,26 @@ async def check_bot_rights_reports_group(
 
 async def fetch_admins(
         bot: Bot,
-        main_group_id: int,
-) -> dict:
+        main_group_id: tuple[int, ...],
+) -> dict[int, dict[int, object]]:
     result = {}
-    admins: list[ChatMemberOwner | ChatMemberAdministrator] = await bot.get_chat_administrators(main_group_id)
-    for admin in admins:
-        if admin.user.is_bot:
-            continue
-        if isinstance(admin, ChatMemberOwner):
-            result[admin.user.id] = {"can_restrict_members": True}
-        else:
-            result[admin.user.id] = {"can_restrict_members": admin.can_restrict_members}
+
+    for chat_id in main_group_id:
+        result[chat_id] = {}
+        chat_admins: list[ChatMemberOwner | ChatMemberAdministrator] = await bot.get_chat_administrators(chat_id)
+        for admin in chat_admins:
+            if admin.user.is_bot:
+                continue
+            if isinstance(admin, ChatMemberOwner):
+                result[chat_id][admin.user.id] = {"can_restrict_members": True}
+            else:
+                result[chat_id][admin.user.id] = {"can_restrict_members": admin.can_restrict_members}
+
     return result
 
 
-async def set_bot_commands(bot: Bot, main_group_id: int):
+async def set_bot_commands(bot: Bot):
     commands = [
         BotCommand(command="report", description="Report message to group admins"),
     ]
-    await bot.set_my_commands(commands, scope=BotCommandScopeChat(chat_id=main_group_id))
+    await bot.set_my_commands(commands, scope=BotCommandScopeAllGroupChats())

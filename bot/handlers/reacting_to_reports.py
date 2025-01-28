@@ -27,7 +27,7 @@ async def reacting_to_reports(
     # First, try to delete message
     try:
         await bot.delete_message(
-            chat_id=bot_config.main_group_id,
+            chat_id=callback_data.chat_id,
             message_id=callback_data.reported_message_id,
         )
     except TelegramAPIError as ex:
@@ -51,7 +51,7 @@ async def reacting_to_reports(
 
     # If action was delete and ban, let's try to ban user as well
     offender_ban_success: bool = True
-    args = {"chat_id": bot_config.main_group_id}
+    args = {"chat_id": callback_data.chat_id}
     if callback_data.user_or_chat_id > 0:
         func = bot.ban_chat_member
         args.update(user_id=callback_data.user_or_chat_id)

@@ -17,13 +17,13 @@ async def cmd_report(
         message: Message,
         command: CommandObject,
         bot: Bot,
-        admins: dict,
+        admins: dict[int, dict[int, object]],
         bot_config: BotConfig,
         l10n: FluentLocalization,
         replied_msg: Message,
 ):
     # If message sent by user who is admin
-    if message.reply_to_message.from_user.id in admins:
+    if message.reply_to_message.from_user.id in admins[message.chat.id]:
         await message.reply(l10n.format_value("error-cannot-report-admins"))
         return
     # If message sent by anonymous group admin
@@ -36,6 +36,7 @@ async def cmd_report(
         return
 
     # Gather all report message parameters
+    chat_id = replied_msg.chat.id
     offender_id = replied_msg.sender_chat.id if replied_msg.sender_chat else replied_msg.from_user.id
     offender_message_id = replied_msg.message_id
     formatted_date_time_offset = get_formatted_datetime(bot_config)
@@ -57,6 +58,7 @@ async def cmd_report(
         chat_id=bot_config.reports_group_id,
         text=l10n.format_value(locale_key, params),
         reply_markup=get_report_keyboard(
+            chat_id=chat_id,
             user_or_chat_id=offender_id,
             reported_message_id=offender_message_id,
             l10n=l10n,

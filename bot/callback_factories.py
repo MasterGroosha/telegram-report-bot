@@ -9,5 +9,6 @@ class AdminAction(str, Enum):
 
 class AdminActionCallbackV1(CallbackData, prefix="v1"):
     action: AdminAction
+    chat_id: int
     user_or_chat_id: int
     reported_message_id: int

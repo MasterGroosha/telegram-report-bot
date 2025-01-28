@@ -34,17 +34,17 @@ async def cmd_ro(
         bot: Bot,
         bot_config: BotConfig,
         l10n: FluentLocalization,
-        admins: dict,
+        admins: dict[int, dict[int, object]],
 ):
     # Prohibit non-admins from using this command
-    if message.from_user.id not in admins:
+    if message.from_user.id not in admins[message.chat.id]:
         return
     # Prohibit from restricting admins
-    if message.reply_to_message.from_user.id in admins.keys():
+    if message.reply_to_message.from_user.id in admins[message.chat.id].keys():
         await message.reply(l10n.format_value("error-restricting-admin"))
         return
     # Do not allow admin with no restrict permissions from restricting other users
-    if admins.get(message.from_user.id, {}).get("can_restrict_members", False) is False:
+    if admins[message.chat.id].get(message.from_user.id, {}).get("can_restrict_members", False) is False:
         await message.reply(l10n.format_value("error-no-restrict-permissions"))
         return
     # If a message is sent on behalf of channel, then we can only ban it

@@ -2,7 +2,7 @@ from enum import StrEnum, auto
 from functools import lru_cache
 from os import getenv
 from tomllib import load
-from typing import Type, TypeVar
+from typing import Type, TypeVar, Union
 
 from pydantic import BaseModel, SecretStr, field_validator
 
@@ -16,13 +16,20 @@ class LogRenderer(StrEnum):
 
 class BotConfig(BaseModel):
     token: SecretStr
-    main_group_id: int
+    main_group_id: tuple[int, ...]
     reports_group_id: int
     utc_offset: int
     date_format: str
     time_format: str
     remove_joins: bool
     auto_ban_channels: bool
+
+    @field_validator("main_group_id", mode="before")
+    @classmethod
+    def main_group_id_transform(cls, raw: Union[int, tuple[int, ...]]) -> tuple[int, ...]:
+        if isinstance(raw, list):
+            return tuple(raw)
+        return (raw,)
 
 
 class LogConfig(BaseModel):

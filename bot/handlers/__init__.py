@@ -2,12 +2,12 @@ from aiogram import F, Router
 from . import changing_admins, reporting_to_admins, reacting_to_reports, restricting_users, additional_features
 
 def get_routers(
-        main_group_id: int,
+        main_group_id: tuple[int, ...],
         reports_group_id: int,
 ) -> list[Router]:
     main_group_router = Router()
-    main_group_router.message.filter(F.chat.id == main_group_id)
-    main_group_router.chat_member.filter(F.chat.id == main_group_id)
+    main_group_router.message.filter(F.chat.id.in_(main_group_id))
+    main_group_router.chat_member.filter(F.chat.id.in_(main_group_id))
     main_group_router.include_routers(
         changing_admins.router,
         restricting_users.router,
