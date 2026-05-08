@@ -59,6 +59,10 @@ async def main():
 
 
     await logger.ainfo("Program started...")
+
+try:
     await dp.start_polling(bot)
+finally:
+    await bot.session.close()
 
 asyncio.run(main())
